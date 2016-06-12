@@ -1,7 +1,7 @@
 var pg = require('pg');
 var File = require('./scripts/file');
 var Promise = require('bluebird');
-var Val = require('./libs/bareutil').Val;
+var _ = require('lodash');
 
 /* Read sql file and delivers query */
 var SQL = new File('./queries', 'sql');
@@ -112,7 +112,7 @@ PGClient.prototype.info = function() {
 	return this.query('info').then(rows).reduce(function(info, row) {
 			var name = row.name;
 
-			if(Val.undefined(info[name]) === true) {
+			if(_.isUndefined(info[name]) === true) {
 				info[row.name] = {
 					tags:[],
 					documents:[],
@@ -121,7 +121,7 @@ PGClient.prototype.info = function() {
 
 			info[name].tags.push(row.tag);
 
-			if(Val.defined(row.content) === true) {
+			if(_.isUndefined(row.content) === true) {
 				info[name].documents.push({
 					name:row.name,
 					extension:row.extension,
