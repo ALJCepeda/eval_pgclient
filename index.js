@@ -110,19 +110,21 @@ PGClient.prototype.project_names = function() {
 
 PGClient.prototype.info = function() {
 	return this.query('info').then(rows).reduce(function(info, row) {
-			var name = row.name;
+			var namelc = row.name.toLowerCase();
 
-			if(_.isUndefined(info[name]) === true) {
-				info[row.name] = {
+			if(_.isUndefined(info[namelc]) === true) {
+				info[namelc] = {
+					name:row.name,
+					acemode:row.acemode,
+					extension:row.extension,
 					tags:[],
-					documents:[],
+					demos:[]
 				};
 			}
 
-			info[name].tags.push(row.tag);
-
-			if(_.isUndefined(row.content) === true) {
-				info[name].documents.push({
+			info[namelc].tags.push(row.tag);
+			if(row.content !== null) {
+				info[namelc].demos.push({
 					name:row.name,
 					extension:row.extension,
 					content:row.content
