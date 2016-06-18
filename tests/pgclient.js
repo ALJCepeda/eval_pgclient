@@ -37,7 +37,7 @@ tape('info', function(t) {
 		);
 	}).catch(t.fail).done(t.end);
 });
-/*
+
 tape('project_names', function(t) {
 	pg.project_names().then(function(names) {
 		t.deepEqual(
@@ -79,4 +79,4 @@ tape('project_insert/project_delete', function(t) {
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted 1 project');
 	}).catch(t.fail).done(t.end);
-});*/
+});
