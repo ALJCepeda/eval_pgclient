@@ -1,10 +1,11 @@
 var pg = require('pg');
 var File = require('./scripts/file');
 var Promise = require('bluebird');
-var _ = require('lodash');
+var bare = require('bareutil');
+var val = bare.val;
 
 /* Read sql file and delivers query */
-var SQL = new File('./queries', 'sql');
+var SQL = new File(__dirname + '/queries', 'sql');
 
 /* Wrapper around PG for app specific queries */
 var PGClient = function(url) {
@@ -88,6 +89,14 @@ PGClient.prototype.document_delete = function(projectName, document) {
 			document.name ]).then(rowCount);
 };
 
+PGClient.prototype.project_exist = function(projectName) {
+	return this.query('project_exist', [projectName])
+		.then(rowCount)
+		.then(function(count) {
+			return count > 0;
+	});
+};
+
 PGClient.prototype.project_insert = function(project) {
 	return this.query('project_insert',
 		[ 	project.name,
@@ -108,26 +117,50 @@ PGClient.prototype.project_names = function() {
 			});
 };
 
-PGClient.prototype.info = function() {
-	return this.query('info').then(rows).reduce(function(info, row) {
+PGClient.prototype.execute = function() {
+	return this.query('execute').then(rows).reduce(function(info, row) {
+		var platformlc = row.platform.toLowerCase();
+
+		if(val.undefined(info[platformlc]) === true) {
+			info[platformlc] = {};
+		}
+
+		var tag = row.tag;
+		info[platformlc][tag] = {
+			run:row.run,
+			compile:row.compile || ''
+		};
+
+		return info;
+	}, {});
+};
+
+PGClient.prototype.meta = function() {
+	return this.query('meta').then(rows).reduce(function(info, row) {
 			var namelc = row.name.toLowerCase();
 
-			if(_.isUndefined(info[namelc]) === true) {
+			if(val.undefined(info[namelc]) === true) {
 				info[namelc] = {
 					name:row.name,
 					acemode:row.acemode,
 					extension:row.extension,
 					tags:[],
-					demos:[]
+					demo:[]
 				};
 			}
 
 			info[namelc].tags.push(row.tag);
+			var content;
+			if(row.content) {
+				content = row.content.replace('\\n', '\n').replace('\\t', '\t');
+			}
+
+			//Need to unescape content before sending
 			if(row.content !== null) {
-				info[namelc].demos.push({
-					name:row.name,
+				info[namelc].demo.push({
+					name:row.document_name,
 					extension:row.extension,
-					content:row.content
+					content:content
 				});
 			}
 

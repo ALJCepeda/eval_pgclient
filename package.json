@@ -21,9 +21,10 @@
     "url": "https://github.com/ALJCepeda/eval_pgclient/issues"
   },
   "dependencies": {
+    "bareutil": "^1.4.2",
     "bluebird": "~3.4.0",
-    "tape": "~4.5.1",
+    "lodash": "~4.13.1",
     "pg": "~5.1.0",
-    "lodash": "~4.13.1"
+    "tape": "~4.5.1"
   }
 }

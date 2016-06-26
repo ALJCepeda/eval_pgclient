@@ -4,9 +4,12 @@ var tape = require('tape');
 var url = 'postgres://vagrant:password@localhost/eval';
 
 var pg = new PGClient(url);
+var xtape = function(name) {
+	console.log('Test (' + name + ') manually avoided');
+};
 
-tape('info', function(t) {
-	pg.info().then(function(info) {
+xtape('meta', function(t) {
+	pg.meta().then(function(info) {
 		t.ok(info.php, 'PHP');
 		t.ok(info.nodejs, 'NodeJS');
 		t.ok(info.haskell, 'Haskell');
@@ -38,6 +41,19 @@ tape('info', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
+xtape('execute', function(t) {
+	pg.execute().then(function(info) {
+		console.log(info);
+	});
+});
+
+tape('project_exist', function(t) {
+	pg.project_exist('PHPS').then(function(result) {
+		console.log(result);
+	});
+});
+
+/*
 tape('project_names', function(t) {
 	pg.project_names().then(function(names) {
 		t.deepEqual(
@@ -79,4 +95,4 @@ tape('project_insert/project_delete', function(t) {
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted 1 project');
 	}).catch(t.fail).done(t.end);
-});
+});*/

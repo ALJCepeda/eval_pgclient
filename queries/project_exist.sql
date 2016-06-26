@@ -1,0 +1,1 @@
+SELECT 1 FROM project WHERE name=$1 LIMIT 1;
