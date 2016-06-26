@@ -47,10 +47,15 @@ xtape('execute', function(t) {
 	});
 });
 
-tape('project_exist', function(t) {
+xtape('project_exist', function(t) {
 	pg.project_exist('PHPS').then(function(result) {
 		console.log(result);
 	});
+});
+
+tape('generateID', function(t) {
+
+	pg.generateID(7)
 });
 
 /*
