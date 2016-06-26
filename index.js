@@ -2,6 +2,7 @@ var pg = require('pg');
 var File = require('./scripts/file');
 var Promise = require('bluebird');
 var bare = require('bareutil');
+var misc = bare.misc;
 var val = bare.val;
 
 /* Read sql file and delivers query */
@@ -87,6 +88,19 @@ PGClient.prototype.document_delete = function(projectName, document) {
 	return this.query('document_delete',
 		[ 	projectName,
 			document.name ]).then(rowCount);
+};
+
+PGClient.prototype.generateID = function(length) {
+	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var id = misc.random(length, possible);
+
+	return this.project_exist(id).then(function(exists) {
+		if(exists === true) {
+			return this.generateID();
+		} else {
+			return id;
+		}
+	}.bind(this));
 };
 
 PGClient.prototype.project_exist = function(projectName) {
