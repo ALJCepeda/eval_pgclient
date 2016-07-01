@@ -1,2 +1,2 @@
-SELECT name
+SELECT id
 FROM project;

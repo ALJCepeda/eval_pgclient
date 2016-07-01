@@ -8,61 +8,66 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
-xtape('meta', function(t) {
-	pg.meta().then(function(info) {
-		t.ok(info.php, 'PHP');
-		t.ok(info.nodejs, 'NodeJS');
-		t.ok(info.haskell, 'Haskell');
-		t.ok(info.pascal, 'Pascal');
+tape('meta', function(t) {
+	pg.meta().then(function(meta) {
+		t.ok(meta.php, 'PHP');
+		t.ok(meta.nodejs, 'NodeJS');
+		t.ok(meta.haskell, 'Haskell');
+		t.ok(meta.pascal, 'Pascal');
 
 		t.deepEqual(
-			info.php.tags,
+			meta.php.tags,
 			[ 'latest', '5.6', '5.4', '5.5' ],
 			'PHP tags'
 		);
 
 		t.deepEqual(
-			info.nodejs.tags,
+			meta.nodejs.tags,
 			[ 'latest', '0.12.7' ],
 			'NodeJS tags'
 		);
 
 		t.deepEqual(
-			info.haskell.tags,
+			meta.haskell.tags,
 			[ 'latest' ],
 			'Haskell tags'
 		);
 
 		t.deepEqual(
-			info.pascal.tags,
+			meta.pascal.tags,
 			[ 'latest' ],
 			'Pascal tags'
 		);
 	}).catch(t.fail).done(t.end);
 });
 
-xtape('execute', function(t) {
-	pg.execute().then(function(info) {
-		console.log(info);
-	});
-});
-
-xtape('project_exist', function(t) {
-	pg.project_exist('PHPS').then(function(result) {
-		console.log(result);
-	});
-});
-
-tape('generateID', function(t) {
-
-	pg.generateID(7)
-});
-
-/*
-tape('project_names', function(t) {
-	pg.project_names().then(function(names) {
+tape('execute', function(t) {
+	pg.execute().then(function(exec) {
 		t.deepEqual(
-			names,
+			exec,
+			{ 	php: { latest: { run: 'php index.php', compile: '' } },
+  				nodejs: { latest: { run: 'node index.js', compile: '' } },
+  				haskell: { latest: { run: './app', compile: 'ghc -o app index.hs' } },
+  				pascal: { latest: { run: './index', compile: 'fpc index.pas' } }	},
+			'Execution information for platforms'
+		);
+	}).catch(t.fail).done(t.end);
+});
+
+tape('projectID_exists', function(t) {
+	pg.projectID_exists('PHP').then(function(result) {
+		t.true(result, 'Project PHP exists');
+
+		return pg.projectID_exists('WONTEXISTMOO').then(function(result) {
+			t.false(result, 'Project WONTEXISTMOO does not exist');
+		});
+	}).catch(t.fail).done(t.end);
+});
+
+tape('project_ids', function(t) {
+	pg.project_ids().then(function(ids) {
+		t.deepEqual(
+			ids,
 			[ 'PHP', 'NodeJS', 'Haskell', 'Pascal' ],
 			'Array of project names'
 		);
@@ -71,17 +76,17 @@ tape('project_names', function(t) {
 
 tape('project_insert/project_delete', function(t) {
 	var project = {
-		name:'phpTest',
+		id:'phpTest',
 		platform:'PHP',
 		tag:'5.6',
 		documents:
 		[
 			{
-				name:'index',
+				id:'index',
 				extension:'php',
 				content:'<?php require(\'helloWorld.php\');'
 			}, {
-				name:'helloWorld',
+				id:'helloWorld',
 				extension:'php',
 				content:'<?php \n\techo \'Hello World!\');'
 			}
@@ -90,14 +95,14 @@ tape('project_insert/project_delete', function(t) {
 
 	pg.project_insert(project).then(function(count) {
 		t.equal(count, 1, 'Inserted 1 project');
-		return pg.document_insert_many(project.name, project.documents);
+		return pg.document_insert_many(project.id, project.documents);
 	}).then(function(count) {
 		t.equal(count, 2, 'Inserted 2 documents');
-		return pg.document_delete_many(project.name, project.documents);
+		return pg.document_delete_many(project.id, project.documents);
 	}).then(function(count) {
 		t.equal(count, 2, 'Deleted 2 documents');
 		return pg.project_delete(project);
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted 1 project');
 	}).catch(t.fail).done(t.end);
-});*/
+});

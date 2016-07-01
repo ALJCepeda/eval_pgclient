@@ -11,6 +11,7 @@ var SQL = new File(__dirname + '/queries', 'sql');
 /* Wrapper around PG for app specific queries */
 var PGClient = function(url) {
 	this.url = url;
+	this.random_possibles = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 };
 
 /* PSQL related semantic closures */
@@ -60,74 +61,80 @@ PGClient.prototype.query_many = function(name, multiArgs) {
 /*
 ##############Section begins query specific operations
 */
-PGClient.prototype.document_insert_many = function(projectName, documents) {
+PGClient.prototype.document_insert_many = function(projectID, documents) {
 	var multiArgs = documents.map(function(document) {
-		return [ projectName, document.name, document.extension, document.content ];
+		return [ projectID, document.id, document.extension, document.content ];
 	});
 
 	return this.query_many('document_insert', multiArgs).reduce(rowCount_reduce, 0);
 };
 
-PGClient.prototype.document_delete_many = function(projectName, documents) {
+PGClient.prototype.document_delete_many = function(projectID, documents) {
 	var multiArgs = documents.map(function(document) {
-		return [ projectName, document.name ];
+		return [ projectID, document.id ];
 	});
 
 	return this.query_many('document_delete', multiArgs).reduce(rowCount_reduce, 0);
 };
 
-PGClient.prototype.document_insert = function(projectName, document) {
+PGClient.prototype.document_insert = function(projectID, document) {
 	return this.query('document_insert',
-		[ 	projectName,
-			document.name,
+		[ 	projectID,
+			document.id,
 			document.extension,
 			document.content ]).then(rowCount);
 };
 
-PGClient.prototype.document_delete = function(projectName, document) {
+PGClient.prototype.document_delete = function(projectID, document) {
 	return this.query('document_delete',
-		[ 	projectName,
-			document.name ]).then(rowCount);
+		[ 	projectID,
+			document.id ]).then(rowCount);
 };
 
 PGClient.prototype.generateID = function(length) {
-	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 	var id = misc.random(length, possible);
+}
+PGClient.prototype.projectID_generate = function(length) {
+	var id = this.generateID(length)
 
-	return this.project_exist(id).then(function(exists) {
+	return this.projectID_exists(id).then(function(exists) {
 		if(exists === true) {
-			return this.generateID();
+			return this.projectID_generate(length);
 		} else {
 			return id;
 		}
 	}.bind(this));
 };
 
-PGClient.prototype.project_exist = function(projectName) {
-	return this.query('project_exist', [projectName])
+PGClient.prototype.projectID_exists = function(projectID) {
+	return this.query('projectID_exists', [projectID])
 		.then(rowCount)
 		.then(function(count) {
 			return count > 0;
 	});
+}
+
+PGClient.prototype.project_exists = function(project) {
+	return this.projectID_exists(project.id);
 };
 
 PGClient.prototype.project_insert = function(project) {
 	return this.query('project_insert',
-		[ 	project.name,
+		[ 	project.id,
 			project.platform,
 			project.tag ]).then(rowCount);
 };
 
 PGClient.prototype.project_delete = function(project) {
 	return this.query('project_delete',
-		[ project.name ]).then(rowCount);
+		[ project.id ]).then(rowCount);
 };
 
-PGClient.prototype.project_names = function() {
-	return this.query('project_names')
+PGClient.prototype.project_ids = function() {
+	return this.query('project_ids')
 			.then(rows)
 			.map(function(row) {
-				return row.name;
+				return row.id;
 			});
 };
 
@@ -151,11 +158,11 @@ PGClient.prototype.execute = function() {
 
 PGClient.prototype.meta = function() {
 	return this.query('meta').then(rows).reduce(function(info, row) {
-			var namelc = row.name.toLowerCase();
+			var idlc = row.id.toLowerCase();
 
-			if(val.undefined(info[namelc]) === true) {
-				info[namelc] = {
-					name:row.name,
+			if(val.undefined(info[idlc]) === true) {
+				info[idlc] = {
+					id:row.id,
 					acemode:row.acemode,
 					extension:row.extension,
 					tags:[],
@@ -163,7 +170,7 @@ PGClient.prototype.meta = function() {
 				};
 			}
 
-			info[namelc].tags.push(row.tag);
+			info[idlc].tags.push(row.tag);
 			var content;
 			if(row.content) {
 				content = row.content.replace('\\n', '\n').replace('\\t', '\t');
@@ -171,8 +178,8 @@ PGClient.prototype.meta = function() {
 
 			//Need to unescape content before sending
 			if(row.content !== null) {
-				info[namelc].demo.push({
-					name:row.document_name,
+				info[idlc].demo.push({
+					id:row.document_id,
 					extension:row.extension,
 					content:content
 				});

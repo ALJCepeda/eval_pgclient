@@ -1,1 +1,1 @@
-INSERT INTO project ( name, platform, tag ) VALUES ( $1, $2, $3 );
+INSERT INTO project ( id, platform, tag ) VALUES ( $1, $2, $3 );

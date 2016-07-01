@@ -1,1 +1,1 @@
-INSERT INTO document ( project, name, extension, content ) VALUES ( $1, $2, $3, $4 );
+INSERT INTO document ( project, id, extension, content ) VALUES ( $1, $2, $3, $4 );

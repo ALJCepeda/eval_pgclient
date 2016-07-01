@@ -1,1 +1,1 @@
-DELETE FROM document WHERE project = $1 AND name = $2;
+DELETE FROM document WHERE project = $1 AND id = $2;
