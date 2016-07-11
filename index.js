@@ -92,7 +92,7 @@ PGClient.prototype.document_delete = function(projectID, document) {
 };
 
 PGClient.prototype.generateID = function(length) {
-	var id = misc.random(length, possible);
+	return misc.random(length, this.random_possibles);
 }
 PGClient.prototype.projectID_generate = function(length) {
 	var id = this.generateID(length)
