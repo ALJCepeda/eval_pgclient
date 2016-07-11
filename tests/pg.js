@@ -8,6 +8,7 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
+var run = function() {
 tape('meta', function(t) {
 	pg.meta().then(function(meta) {
 		t.deepEqual(
@@ -173,3 +174,9 @@ tape('project_insert/project_delete', function(t) {
 		t.equal(count, 1, 'Deleted 1 project');
 	}).catch(t.fail).done(t.end);
 });*/
+
+}
+
+module.exports = {
+	run:run
+};
