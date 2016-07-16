@@ -1,1 +1,1 @@
-require('./pg').run();
+require('./pg');

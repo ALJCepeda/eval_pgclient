@@ -8,7 +8,6 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
-var run = function() {
 tape('meta', function(t) {
 	pg.meta().then(function(meta) {
 		t.deepEqual(
@@ -79,6 +78,26 @@ tape('project_ids_select', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
+tape('project_select', function(t) {
+	pg.project_select('phptest').then(function(result) {
+		t.deepEqual(
+			result,
+			{ 	id: 'phptest',
+  				platform: 'php',
+  				tag: 'latest',
+  				save: 'test1',
+  				parent: null,
+  				documents:[
+					{ 	id: 'index',
+       					extension: 'php',
+       					content: '<?php echo "This is php test1";' }
+				]
+			}, 'Selected phptest project'
+		);
+	}).catch(t.fail).done(t.end);
+});
+
+/*
 tape('project_save_select', function(t) {
 	pg.project_save_select('phptest', 'test1').then(function(project) {
 		t.deepEqual(
@@ -174,9 +193,3 @@ tape('project_insert/project_delete', function(t) {
 		t.equal(count, 1, 'Deleted 1 project');
 	}).catch(t.fail).done(t.end);
 });*/
-
-}
-
-module.exports = {
-	run:run
-};

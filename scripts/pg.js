@@ -1,6 +1,7 @@
 var pg = require('pg');
 var File = require('./file');
 var Promise = require('bluebird');
+var Project = require('./project');
 var bare = require('bareutil');
 var misc = bare.misc;
 var val = bare.val;
@@ -17,9 +18,9 @@ var PGClient = function(url) {
 /* PSQL related semantic closures */
 var rowCount = function(result) { return result.rowCount; };
 var rowCount_reduce = function(pre, result) { return pre + rowCount(result); };
-var rows = function(result) { return result.rows; };
+var getRows = function(result) { return result.rows; };
+var getFirstRow = function(result) { return result.rows[0]; };
 var rows_map = function(result) { return rows(result); };
-
 /* Reads SQL file and performs query with parameterized args */
 PGClient.prototype.query = function(name, args) {
 	var self = this;
@@ -132,38 +133,27 @@ PGClient.prototype.project_delete = function(project) {
 
 PGClient.prototype.project_ids_select = function() {
 	return this.query('project_ids_select')
-			.then(rows)
+			.then(getRows)
 			.map(function(row) {
 				return row.id;
 			});
 };
 
+PGClient.prototype.project_select = function(project_id) {
+    return this.query('project_select', [ project_id ])
+                .then(getFirstRow)
+				.then(Project.fromRow);
+};
+
 PGClient.prototype.project_save_select = function(project_id, save_id) {
     return this.query('project_save_select', [ project_id, save_id ])
-            .then(rows)
-            .reduce(function(project, row) {
-                if(val.undefined(project.id)) {
-                    project = {
-                        id:row.project_id,
-                        saveID:row.save_id,
-                        parentID:row.save_parent || '',
-                        documents:[]
-                    };
-                }
-
-                project.documents.push({
-                    id:row.document_id,
-                    extension:row.document_extension,
-                    content:row.document_content
-                });
-
-                return project;
-            }, {});
+            .then(getFirstRow)
+            .then(Project.fromRow);
 };
 
 PGClient.prototype.execute = function() {
 	return this.query('execute')
-            .then(rows)
+            .then(getRows)
             .reduce(function(info, row) {
         		var platformlc = row.platform.toLowerCase();
 
@@ -182,7 +172,7 @@ PGClient.prototype.execute = function() {
 };
 
 PGClient.prototype.meta = function() {
-	return this.query('meta').then(rows).reduce(function(info, row) {
+	return this.query('meta').then(getRows).reduce(function(info, row) {
 		     var id = row.platform_id;
 
 			if(val.undefined(info[id])) {
