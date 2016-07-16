@@ -1,10 +1,24 @@
 var bare = require('bareutil');
 var val = bare.val;
 
-var Document = function() {
+var Document = function(data) {
     this.id = '';
     this.extension = '';
     this.content = '';
+
+    bare.obj.merge(this, data || {});
+};
+
+Document.create = function(data) {
+    var doc = new Document(data);
+    return doc;
+};
+
+Document.fromObj = Document.create;
+Document.fromObjs = function(objs) {
+    return objs.map(function(obj) {
+        return Document.create(obj);
+    });
 };
 
 Document.fromRow = function(row) {
@@ -18,13 +32,9 @@ Document.fromRow = function(row) {
 };
 
 Document.fromRows = function(rows) {
-    var documents = [];
-
-    rows.forEach(function(row) {
-        documents.push(Document.fromRow(row));
+    return rows.map(function(row) {
+        return Document.fromRow(row);
     });
-
-    return documents;
 };
 
 module.exports = Document;

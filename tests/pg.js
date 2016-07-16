@@ -1,4 +1,6 @@
 var PGClient = require('./../scripts/pg');
+var Project = require('./../scripts/project');
+
 var Promise = require('bluebird');
 var tape = require('tape');
 var url = 'postgres://vagrant:password@localhost/eval';
@@ -8,6 +10,7 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
+/*
 tape('meta', function(t) {
 	pg.meta().then(function(meta) {
 		t.deepEqual(
@@ -79,9 +82,9 @@ tape('project_ids_select', function(t) {
 });
 
 tape('project_select', function(t) {
-	pg.project_select('phptest').then(function(result) {
+	pg.project_select('phptest').then(function(project) {
 		t.deepEqual(
-			result,
+			project,
 			{ 	id: 'phptest',
   				platform: 'php',
   				tag: 'latest',
@@ -94,17 +97,37 @@ tape('project_select', function(t) {
 				]
 			}, 'Selected phptest project'
 		);
+
+		return pg.project_select('nodejstest');
+	}).then(function(project) {
+		t.deepEqual(
+			project,
+			{ 	id: 'nodejstest',
+  				platform: 'nodejs',
+  				tag: 'latest',
+  				save: 'test1',
+  				parent: null,
+  				documents: [
+					{ 	id: 'index',
+       					extension: 'js',
+       					content: 'console.log("This is nodejs test1");' 	}
+				]
+			}, 'Selected nodejstest project'
+		);
+
 	}).catch(t.fail).done(t.end);
 });
 
-/*
-tape('project_save_select', function(t) {
+*/
+xtape('project_save_select', function(t) {
 	pg.project_save_select('phptest', 'test1').then(function(project) {
 		t.deepEqual(
 			project,
 			{ 	id: 'phptest',
-  				saveID: 'test1',
-  				parentID: '',
+				platform:'php',
+				tag:'latest',
+  				save: 'test1',
+  				parent: null,
   				documents: [
 					{ 	id: 'index',
        					extension: 'php',
@@ -118,8 +141,10 @@ tape('project_save_select', function(t) {
 		t.deepEqual(
 			project,
 			{ 	id: 'phptest',
-  				saveID: 'test2',
-  				parentID: 'test1',
+				platform:'php',
+				tag:'latest',
+  				save: 'test2',
+  				parent: 'test1',
   				documents: [
 					{ 	id: 'index',
        					extension: 'php',
@@ -133,8 +158,10 @@ tape('project_save_select', function(t) {
 		t.deepEqual(
 			project,
 			{ 	id: 'nodejstest',
-  				saveID: 'test1',
-  				parentID: '',
+				platform: 'nodejs',
+				tag:'latest',
+  				save: 'test1',
+  				parent: null,
   				documents: [
 					{ 	id: 'index',
        					extension: 'js',
@@ -148,8 +175,10 @@ tape('project_save_select', function(t) {
 		t.deepEqual(
 			project,
 			{ 	id: 'nodejstest',
-  				saveID: 'test2',
-  				parentID: 'test1',
+				platform: 'nodejs',
+				tag:'latest',
+  				save: 'test2',
+  				parent: 'test1',
   				documents: [
 					{ 	id: 'index',
        					extension: 'js',
@@ -160,11 +189,12 @@ tape('project_save_select', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
-/*
 tape('project_insert/project_delete', function(t) {
-	var project = {
-		id:'phpTest',
+	var project = new Project({
+		id:'phpInsertTest',
 		platform:'PHP',
+		save:'insertTest1',
+		parent:null,
 		tag:'5.6',
 		documents:
 		[
@@ -178,8 +208,11 @@ tape('project_insert/project_delete', function(t) {
 				content:'<?php \n\techo \'Hello World!\');'
 			}
 		]
-	};
+	});
 
+	console.log(project);
+	t.end();
+	return;
 	pg.project_insert(project).then(function(count) {
 		t.equal(count, 1, 'Inserted 1 project');
 		return pg.document_insert_many(project.id, project.documents);
@@ -192,4 +225,4 @@ tape('project_insert/project_delete', function(t) {
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted 1 project');
 	}).catch(t.fail).done(t.end);
-});*/
+});

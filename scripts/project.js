@@ -1,6 +1,7 @@
 var Document = require('./document');
+var bare = require('bareutil');
 
-var Project = function() {
+var Project = function(params) {
     this.id = '';
     this.platform = '';
     this.tag = '';
@@ -9,6 +10,7 @@ var Project = function() {
     this.parent = '';
 
     this.documents = [];
+    bare.obj.merge(this, params || {}, { documents:Document.fromObjs });
 };
 
 Project.fromRow = function(row) {
