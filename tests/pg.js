@@ -1,4 +1,4 @@
-var PGClient = require('./../scripts/pg');
+var PGClient = require('./../scripts/pgclient');
 var Project = require('./../scripts/project');
 
 var Promise = require('bluebird');
@@ -10,37 +10,68 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
-/*
-tape('meta', function(t) {
-	pg.meta().then(function(meta) {
+tape('platform', function(t) {
+	pg.platform().then(function(platform) {
 		t.deepEqual(
-			meta,
-			{	php: {
-					name: 'PHP',
-     				aceMode: 'php',
-     				extension: 'php',
-     				tags: [ 'latest', '5.5', '5.4', '5.6' ],
-     				demo: { latest: '<?php\\n\\techo "Hello World!";' } },
-  				nodejs: {
-					name: 'NodeJS',
-     				aceMode: 'javascript',
-     				extension: 'js',
-     				tags: [ 'latest', '0.12.7' ],
-     				demo: { latest: 'console.log("Hello World!");' } },
-  				haskell: {
-					name: 'Haskell',
-     				aceMode: 'haskell',
-     				extension: 'hs',
-     				tags: [ 'latest' ],
-     				demo: { latest: 'main = putStrLn "Hello World!";' } },
-  				pascal: {
-					name: 'Pascal',
-     				aceMode: 'pascal',
-     				extension: 'pas',
-     				tags: [ 'latest' ],
-     				demo: { latest: 'program Hello;\\nbegin\\n\\twriteln ("Hello World!");\\nend.' }
-			} },
-			'Platform meta information');
+			platform,
+			[
+				{ 	demo_content: '<?php\\n\\techo "Hello World!";',
+					demo_extension: 'php',
+					platform_acemode: 'php',
+					platform_extension: 'php',
+					platform_id: 'php',
+					platform_name: 'PHP',
+					version_tag: 'latest'
+			}, { 	demo_content: 'console.log("Hello World!");',
+					demo_extension: 'js',
+					platform_acemode: 'javascript',
+					platform_extension: 'js',
+					platform_id: 'nodejs',
+					platform_name: 'NodeJS',
+					version_tag: 'latest'
+			}, { 	demo_content: 'main = putStrLn "Hello World!";',
+					demo_extension: 'hs',
+					platform_acemode: 'haskell',
+					platform_extension: 'hs',
+					platform_id: 'haskell',
+					platform_name: 'Haskell',
+					version_tag: 'latest'
+			}, { 	demo_content: 'program Hello;\\nbegin\\n\\twriteln ("Hello World!");\\nend.',
+					demo_extension: 'pas',
+					platform_acemode: 'pascal',
+					platform_extension: 'pas',
+					platform_id: 'pascal',
+					platform_name: 'Pascal',
+					version_tag: 'latest'
+			}, { 	demo_content: null,
+					demo_extension: null,
+					platform_acemode: 'php',
+					platform_extension: 'php',
+					platform_id: 'php',
+					platform_name: 'PHP',
+					version_tag: '5.5'
+			}, { 	demo_content: null,
+					demo_extension: null,
+					platform_acemode: 'php',
+					platform_extension: 'php',
+					platform_id: 'php',
+					platform_name: 'PHP',
+					version_tag: '5.4'
+			}, { 	demo_content: null,
+					demo_extension: null,
+					platform_acemode: 'php',
+					platform_extension: 'php',
+					platform_id: 'php',
+					platform_name: 'PHP',
+					version_tag: '5.6'
+			}, { 	demo_content: null,
+					demo_extension: null,
+					platform_acemode: 'javascript',
+					platform_extension: 'js',
+					platform_id: 'nodejs',
+					platform_name: 'NodeJS',
+					version_tag: '0.12.7'
+			} ], 'Platform information');
 	}).catch(t.fail).done(t.end);
 });
 
@@ -48,23 +79,32 @@ tape('execute', function(t) {
 	pg.execute().then(function(exec) {
 		t.deepEqual(
 			exec,
-			{ 	php: { latest: { run: 'php index.php', compile: '' } },
-  				nodejs: { latest: { run: 'node index.js', compile: '' } },
-  				haskell: { latest: { run: './app', compile: 'ghc -o app index.hs' } },
-  				pascal: { latest: { run: './index', compile: 'fpc index.pas' } }	},
-			'Execution information for platforms'
-		);
+			[ { 	compile: null,
+					platform: 'php',
+					run: 'php index.php',
+					tag: 'latest'
+			}, { 	compile: null,
+					platform: 'nodejs',
+					run: 'node index.js',
+					tag: 'latest'
+			}, { 	compile: 'ghc -o app index.hs',
+					platform: 'haskell',
+					run: './app',
+					tag: 'latest'
+			}, { 	compile: 'fpc index.pas',
+					platform: 'pascal',
+					run: './index',
+					tag: 'latest'
+			} ], 'Execution information for platforms');
 	}).catch(t.fail).done(t.end);
 });
 
 tape('project_id_exists', function(t) {
 	pg.project_id_exists('phptest').then(function(result) {
 		t.true(result, 'Project phptest exists');
-
 		return pg.project_id_exists('nodejstest');
 	}).then(function(result) {
 		t.true(result, 'Project nodejstest exists');
-
 		return pg.project_id_exists('WONTEXISTMOO');
 	}).then(function(result) {
 		t.false(result, 'Project WONTEXISTMOO does not exist');
@@ -81,20 +121,19 @@ tape('project_ids_select', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
+
 tape('project_select', function(t) {
 	pg.project_select('phptest').then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	id: 'phptest',
-  				platform: 'php',
-  				tag: 'latest',
-  				save: 'test1',
-  				parent: null,
-  				documents:[
-					{ 	id: 'index',
-       					extension: 'php',
-       					content: '<?php echo "This is php test1";' }
-				]
+			{ 	document_content: '<?php echo "This is php test1";',
+				document_extension: 'php',
+				document_id: 'index',
+				project_id: 'phptest',
+				project_platform: 'php',
+				project_tag: 'latest',
+				save_id: 'test1',
+				save_parent: null
 			}, 'Selected phptest project'
 		);
 
@@ -102,93 +141,82 @@ tape('project_select', function(t) {
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	id: 'nodejstest',
-  				platform: 'nodejs',
-  				tag: 'latest',
-  				save: 'test1',
-  				parent: null,
-  				documents: [
-					{ 	id: 'index',
-       					extension: 'js',
-       					content: 'console.log("This is nodejs test1");' 	}
-				]
+			{ 	document_content: 'console.log("This is nodejs test1");',
+				document_extension: 'js',
+				document_id: 'index',
+				project_id: 'nodejstest',
+				project_platform: 'nodejs',
+				project_tag: 'latest',
+				save_id: 'test1',
+				save_parent: null
 			}, 'Selected nodejstest project'
 		);
 
 	}).catch(t.fail).done(t.end);
 });
 
-*/
-xtape('project_save_select', function(t) {
+tape('project_save_select', function(t) {
 	pg.project_save_select('phptest', 'test1').then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	id: 'phptest',
-				platform:'php',
-				tag:'latest',
-  				save: 'test1',
-  				parent: null,
-  				documents: [
-					{ 	id: 'index',
-       					extension: 'php',
-       					content: '<?php echo "This is php test1";' }
-			] },
-			'PHP project test1 save'
+			{ 	document_content: '<?php echo "This is php test1";',
+				document_extension: 'php',
+				document_id: 'index',
+				project_id: 'phptest',
+				project_platform: 'php',
+				project_tag: 'latest',
+				save_id: 'test1',
+				save_parent: null
+			}, 'PHP project test1 save'
 		);
 
 		return pg.project_save_select('phptest', 'test2');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	id: 'phptest',
-				platform:'php',
-				tag:'latest',
-  				save: 'test2',
-  				parent: 'test1',
-  				documents: [
-					{ 	id: 'index',
-       					extension: 'php',
-       					content: '<?php echo "This is php test2";' }
-			] },
-			'PHP project test2 save'
+			{ 	document_content: '<?php echo "This is php test2";',
+				document_extension: 'php',
+				document_id: 'index',
+				project_id: 'phptest',
+				project_platform: 'php',
+				project_tag: 'latest',
+				save_id: 'test2',
+				save_parent: 'test1'
+			}, 'PHP project test2 save'
 		);
 
 		return pg.project_save_select('nodejstest', 'test1');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	id: 'nodejstest',
-				platform: 'nodejs',
-				tag:'latest',
-  				save: 'test1',
-  				parent: null,
-  				documents: [
-					{ 	id: 'index',
-       					extension: 'js',
-       					content: 'console.log("This is nodejs test1");' }
-			] },
-			'NodeJS project test1 save'
+			{ 	document_content: 'console.log("This is nodejs test1");',
+				document_extension: 'js',
+				document_id: 'index',
+				project_id: 'nodejstest',
+				project_platform: 'nodejs',
+				project_tag: 'latest',
+				save_id: 'test1',
+				save_parent: null
+			}, 'NodeJS project test1 save'
 		);
 
 		return pg.project_save_select('nodejstest', 'test2');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	id: 'nodejstest',
-				platform: 'nodejs',
-				tag:'latest',
-  				save: 'test2',
-  				parent: 'test1',
-  				documents: [
-					{ 	id: 'index',
-       					extension: 'js',
-       					content: 'console.log("This is nodejs test2");' }
-			] },
-			'NodeJS project test2 save'
+			{ 	document_content: 'console.log("This is nodejs test2");',
+				document_extension: 'js',
+				document_id: 'index',
+				project_id: 'nodejstest',
+				project_platform: 'nodejs',
+				project_tag: 'latest',
+				save_id: 'test2',
+				save_parent: 'test1'
+			}, 'NodeJS project test2 save'
 		);
 	}).catch(t.fail).done(t.end);
 });
-
+/*
 tape('project_insert/project_delete', function(t) {
 	var project = new Project({
 		id:'phpInsertTest',
@@ -210,9 +238,6 @@ tape('project_insert/project_delete', function(t) {
 		]
 	});
 
-	console.log(project);
-	t.end();
-	return;
 	pg.project_insert(project).then(function(count) {
 		t.equal(count, 1, 'Inserted 1 project');
 		return pg.document_insert_many(project.id, project.documents);
@@ -225,4 +250,4 @@ tape('project_insert/project_delete', function(t) {
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted 1 project');
 	}).catch(t.fail).done(t.end);
-});
+});*/
