@@ -15,7 +15,7 @@ var PGClient = function(url) {
 };
 
 /* PSQL related semantic closures */
-var rowCount = function(result) { return result.rowCount; };
+var countRows = function(result) { return result.countRows; };
 var getRows = function(result) { return result.rows; };
 var getFirstRow = function(result) { return result.rows[0]; };
 
@@ -43,19 +43,9 @@ PGClient.prototype.query = function(name, args) {
 /*
 ##############Section begins query specific operations
 */
-PGClient.prototype.document_insert = function(projectID, documentID, extension, content) {
-	return this.query('document_insert',[ projectID, documentID, extension, content ])
-				.then(rowCount);
-};
-
-PGClient.prototype.document_delete = function(projectID, documentID) {
-	return this.query('document_delete',[ projectID, documentID ])
-				.then(rowCount);
-};
-
 PGClient.prototype.project_id_exists = function(id) {
 	return this.query('project_id_exists', [id])
-				.then(rowCount)
+				.then(countRows)
 				.then(function(count) {
 					return count > 0;
 			});
@@ -63,12 +53,12 @@ PGClient.prototype.project_id_exists = function(id) {
 
 PGClient.prototype.project_insert = function(id, platform, tag) {
 	return this.query('project_insert', [ id, platform, tag ])
-				.then(rowCount);
+				.then(countRows);
 };
 
 PGClient.prototype.project_delete = function(id) {
 	return this.query('project_delete',[ id ])
-				.then(rowCount);
+				.then(countRows);
 };
 
 PGClient.prototype.project_ids_select = function() {
@@ -87,6 +77,21 @@ PGClient.prototype.project_select = function(projectID) {
 PGClient.prototype.project_save_select = function(projectID, saveID) {
     return this.query('project_save_select', [ projectID, saveID ])
             	.then(getFirstRow);
+};
+
+PGClient.prototype.save_insert = function(saveID, projectID, parentID) {
+	return this.query('save_insert', [ saveID, projectID, parentID || NULL ])
+				.then(countRows);
+};
+
+PGClient.prototype.document_insert = function(projectID, documentID, extension, content) {
+	return this.query('document_insert',[ projectID, documentID, extension, content ])
+				.then(countRows);
+};
+
+PGClient.prototype.document_delete = function(projectID, documentID) {
+	return this.query('document_delete',[ projectID, documentID ])
+				.then(countRows);
 };
 
 PGClient.prototype.execute = function() {

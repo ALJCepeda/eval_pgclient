@@ -1,5 +1,4 @@
 var PGClient = require('./../scripts/pgclient');
-var Project = require('./../scripts/project');
 
 var Promise = require('bluebird');
 var tape = require('tape');
@@ -9,7 +8,7 @@ var pg = new PGClient(url);
 var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
-
+/*
 tape('platform', function(t) {
 	pg.platform().then(function(platform) {
 		t.deepEqual(
@@ -216,7 +215,7 @@ tape('project_save_select', function(t) {
 		);
 	}).catch(t.fail).done(t.end);
 });
-/*
+*/
 tape('project_insert/project_delete', function(t) {
 	var project = new Project({
 		id:'phpInsertTest',
@@ -238,16 +237,38 @@ tape('project_insert/project_delete', function(t) {
 		]
 	});
 
-	pg.project_insert(project).then(function(count) {
-		t.equal(count, 1, 'Inserted 1 project');
-		return pg.document_insert_many(project.id, project.documents);
+	pg.project_insert(	'phpInsertTest',
+						'php',
+						'5.6')
+	.then(function(count) {
+		t.equal(count, 1, 'Inserted project phpInsertTest');
+		return pg.save_insert( 	'phpInsertSave',
+								'phpInsertTest',
+								NULL);
 	}).then(function(count) {
-		t.equal(count, 2, 'Inserted 2 documents');
-		return pg.document_delete_many(project.id, project.documents);
+		t.equal(count, 1, 'Insert save phpInsertSave');
+		return pg.document_insert(	'phpInsertTest',
+									'index',
+									'php',
+									'<?php require(\'helloWorld.php\');');
 	}).then(function(count) {
-		t.equal(count, 2, 'Deleted 2 documents');
-		return pg.project_delete(project);
+		t.equal(count, 1, 'Inserted document index');
+		return pg.document_insert( 	'phpInsertTest',
+									'helloWorld',
+									'php',
+									'<?php \n\techo \'Hello World!\');');
 	}).then(function(count) {
-		t.equal(count, 1, 'Deleted 1 project');
+		t.equal(count, 1, 'Inserted document helloWorld');
+		return pg.document_delete( 	'phpInsertTest',
+									'helloWorld');
+	}).then(function(count) {
+		t.equal(count, 1, 'Deleted document helloWorld');
+		return pg.document_delete(	'phpInsertTest',
+									'index');
+	}).then(function(count) {
+		t.equal(count, 1, 'Deleted document index');
+		return pg.project_delete('phpInsertTest');
+	}).then(function(count) {
+		t.equal(count, 1, 'Deleted project phpInsertTest');
 	}).catch(t.fail).done(t.end);
-});*/
+});
