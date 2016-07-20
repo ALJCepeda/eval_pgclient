@@ -8,7 +8,7 @@ var pg = new PGClient(url);
 var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
-/*
+
 tape('platform', function(t) {
 	pg.platform().then(function(platform) {
 		t.deepEqual(
@@ -215,58 +215,45 @@ tape('project_save_select', function(t) {
 		);
 	}).catch(t.fail).done(t.end);
 });
-*/
-tape('project_insert/project_delete', function(t) {
-	var project = new Project({
-		id:'phpInsertTest',
-		platform:'PHP',
-		save:'insertTest1',
-		parent:null,
-		tag:'5.6',
-		documents:
-		[
-			{
-				id:'index',
-				extension:'php',
-				content:'<?php require(\'helloWorld.php\');'
-			}, {
-				id:'helloWorld',
-				extension:'php',
-				content:'<?php \n\techo \'Hello World!\');'
-			}
-		]
-	});
 
+tape('project_insert/project_delete', function(t) {
 	pg.project_insert(	'phpInsertTest',
 						'php',
 						'5.6')
 	.then(function(count) {
 		t.equal(count, 1, 'Inserted project phpInsertTest');
-		return pg.save_insert( 	'phpInsertSave',
-								'phpInsertTest',
-								NULL);
+		return pg.save_insert( 	'save1',
+								'phpInsertTest');
 	}).then(function(count) {
-		t.equal(count, 1, 'Insert save phpInsertSave');
+		t.equal(count, 1, 'Inserted save save1');
 		return pg.document_insert(	'phpInsertTest',
+									'save1',
 									'index',
 									'php',
 									'<?php require(\'helloWorld.php\');');
 	}).then(function(count) {
 		t.equal(count, 1, 'Inserted document index');
 		return pg.document_insert( 	'phpInsertTest',
+									'save1',
 									'helloWorld',
 									'php',
 									'<?php \n\techo \'Hello World!\');');
 	}).then(function(count) {
 		t.equal(count, 1, 'Inserted document helloWorld');
 		return pg.document_delete( 	'phpInsertTest',
+									'save1',
 									'helloWorld');
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted document helloWorld');
 		return pg.document_delete(	'phpInsertTest',
+									'save1',
 									'index');
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted document index');
+		return pg.save_delete(	'save1',
+								'phpInsertTest');
+	}).then(function(count) {
+		t.equal(count, 1, 'Deleted save save1');
 		return pg.project_delete('phpInsertTest');
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted project phpInsertTest');

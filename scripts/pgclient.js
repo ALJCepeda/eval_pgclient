@@ -15,7 +15,7 @@ var PGClient = function(url) {
 };
 
 /* PSQL related semantic closures */
-var countRows = function(result) { return result.countRows; };
+var countRows = function(result) { return result.rowCount; };
 var getRows = function(result) { return result.rows; };
 var getFirstRow = function(result) { return result.rows[0]; };
 
@@ -79,18 +79,23 @@ PGClient.prototype.project_save_select = function(projectID, saveID) {
             	.then(getFirstRow);
 };
 
-PGClient.prototype.save_insert = function(saveID, projectID, parentID) {
-	return this.query('save_insert', [ saveID, projectID, parentID || NULL ])
+PGClient.prototype.save_insert = function(saveID, projectID) {
+	return this.query('save_insert', [ saveID, projectID ])
 				.then(countRows);
 };
 
-PGClient.prototype.document_insert = function(projectID, documentID, extension, content) {
-	return this.query('document_insert',[ projectID, documentID, extension, content ])
+PGClient.prototype.save_delete = function(saveID, projectID) {
+	return this.query('save_delete', [ saveID, projectID ])
 				.then(countRows);
 };
 
-PGClient.prototype.document_delete = function(projectID, documentID) {
-	return this.query('document_delete',[ projectID, documentID ])
+PGClient.prototype.document_insert = function(projectID, saveID, documentID, extension, content) {
+	return this.query('document_insert',[ projectID, saveID, documentID, extension, content ])
+				.then(countRows);
+};
+
+PGClient.prototype.document_delete = function(projectID, saveID, documentID) {
+	return this.query('document_delete',[ projectID, saveID, documentID ])
 				.then(countRows);
 };
 
