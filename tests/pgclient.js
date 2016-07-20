@@ -219,7 +219,8 @@ tape('project_save_select', function(t) {
 tape('project_insert/project_delete', function(t) {
 	pg.project_insert(	'phpInsertTest',
 						'php',
-						'5.6')
+						'5.6',
+						'save1')
 	.then(function(count) {
 		t.equal(count, 1, 'Inserted project phpInsertTest');
 		return pg.save_insert( 	'save1',

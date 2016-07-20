@@ -51,8 +51,8 @@ PGClient.prototype.project_id_exists = function(id) {
 			});
 }
 
-PGClient.prototype.project_insert = function(id, platform, tag) {
-	return this.query('project_insert', [ id, platform, tag ])
+PGClient.prototype.project_insert = function(id, platform, tag, save_root) {
+	return this.query('project_insert', [ id, platform, tag, save_root ])
 				.then(countRows);
 };
 

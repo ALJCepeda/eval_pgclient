@@ -14,19 +14,28 @@ var PGAgent = function(url) {
 };
 
 PGAgent.prototype.projectInsert = function(project) {
+    var self = this;
     return this.pg.project_insert(project.id, project.platform, project.tag)
-                .then(function(result) {
+                .then(function(count) {
+                    if(val.defined(project.parent)) {
+                        return self.pg.save_parent_insert(project.save, project.id, project.parent);
+                    } else {
+                        return self.pg.save_insert(project.save, project.id);
+                    }
+                }).then(function(count) {
                     return Promise.all(project.documents.map(function(document) {
-                        return this.pg.document_insert(project.id, document.id, document.extension, document.content);
-                    }.bind(this)));
-                }.bind(this));
+                        return self.pg.document_insert(project.id, document.id, document.extension, document.content);
+                    }));
+                }));
 };
 
 PGAgent.prototype.projectDelete = function(project) {
+    var self = this;
     return Promise.all(project.documents.map(function(document) {
-        return this.pg.document_delete(project.id, document.id);
-    }.bind(this))).then(function(result) {
-        return this.pg.project_delete(project.id);
+        return self.pg.document_delete(project.id, document.id);
+    })).then(function(result) {
+        return self.pg.save_delete()
+        return self.pg.project_delete(project.id);
     });
 };
 
@@ -39,16 +48,16 @@ PGAgent.prototype.projectSelectSave = function(projectID, saveID) {
 };
 
 PGAgent.prototype.generateID = function(length) {
-	var id = misc.random(length, this.randomPossibles);
+    var self = this;
+    var id = misc.random(length, this.randomPossibles);
 
 	return this.pg.project_id_exists(id).then(function(exists) {
 		if(exists === true) {
-			return this.generateID(length);
+			return self.generateID(length);
 		} else {
 			return id;
 		}
-	}.bind(this));
-};
+	});
 
 PGAgent.prototype.execute = function() {
     return this.pg.execute().then(Execute.fromRows);
