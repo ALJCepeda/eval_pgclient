@@ -261,8 +261,7 @@ tape('project_delete', function(t) {
 									'index');
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted document index');
-		return pg.save_delete(	'save1',
-								'phpInsertTest');
+		return pg.save_delete('phpInsertTest');
 	}).then(function(count) {
 		t.equal(count, 1, 'Deleted save save1');
 		return pg.project_delete('phpInsertTest');
