@@ -77,9 +77,12 @@ tape('projectSelect', function(t) {
             {   id: 'phptest',
                 platform: 'php',
                 tag: 'latest',
-                saveRoot: 'test1',
-                save: 'test1',
-                parent: null,
+				save: {
+					id: 'test1',
+					root: 'test1',
+					parent: null,
+					output: 'This is php test1'
+				},
                 documents:{
                    index: {	id: 'index',
                         	extension: 'php',
@@ -97,9 +100,12 @@ tape('projectSaveSelect', function(t) {
 			{ 	id: 'phptest',
   				platform: 'php',
   				tag: 'latest',
-  				saveRoot: 'test1',
-  				save: 'test2',
-  				parent: 'test1',
+				save: {
+					id: 'test2',
+					root: 'test1',
+					parent: 'test1',
+					output: 'This is php test2'
+				},
   				documents: {
 					index: { 	id: 'index',
        							extension: 'php',
@@ -125,8 +131,12 @@ var phpProject = new Project({
 	id:'phpize',
 	platform:'php',
 	tag:'5.6',
-	saveRoot:'izesave',
-	save:'izesave',
+	save: {
+		id: 'izesave',
+		root: 'izesave',
+		parent: null,
+		output: ''
+	},
 	documents: {
 		index: {
 			id:'index',
@@ -146,9 +156,12 @@ var save1Project = new Project({
 	id:'phpize',
 	platform:'php',
 	tag:'5.6',
-	saveRoot:'izesave',
-	save:'save1',
-	parent:'izesave',
+	save: {
+		id: 'save1',
+		root: 'izesave',
+		parent: 'izesave',
+		output: ''
+	},
 	documents: {
 		index: {
 			id:'index',
@@ -162,9 +175,12 @@ var save2Project = new Project({
 	id:'phpize',
 	platform:'php',
 	tag:'5.6',
-	saveRoot:'izesave',
-	save:'save2',
-	parent:'save1',
+	save: {
+		id: 'save2',
+		root: 'izesave',
+		parent: 'save1',
+		output: ''
+	},
 	documents: {
 		index: {
 			id:'index',
