@@ -83,13 +83,26 @@ INSERT INTO save (id, project, parent) VALUES
 	( 'test1', 'nodejstest', NULL ),
 	( 'test2', 'nodejstest', 'test1');
 
+CREATE TABLE output (
+	save TEXT NOT NULL,
+	project TEXT NOT NULL,
+	content TEXT NOT NULL,
+	FOREIGN KEY(save, project) REFERENCES save ON DELETE CASCADE,
+	PRIMARY KEY(save, project)
+);
+
+INSERT INTO output (save, project, content) VALUES
+	('test1', 'phptest', 'This is php test1'),
+	('test2', 'phptest', 'This is php test2'),
+	('test1', 'nodejstest', 'This is nodejs test1'),
+	('test2', 'nodejstest', 'This is nodejs test2');
+
 CREATE TABLE document (
 	id TEXT NOT NULL,
 	save TEXT NOT NULL,
 	project TEXT NOT NULL,
 	extension TEXT NOT NULL,
 	content TEXT NOT NULL,
-	created timestamp with time zone DEFAULT now(),
 	FOREIGN KEY(save, project) REFERENCES save ON DELETE CASCADE,
 	PRIMARY KEY(id, extension, save, project)
 );
