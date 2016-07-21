@@ -116,9 +116,12 @@ Agent.createProject = function(rows) {
         id:first.project_id,
         platform:first.project_platform,
         tag:first.project_tag,
-        saveRoot:first.project_saveroot,
-        save:first.save_id,
-        parent:first.save_parent
+        save: {
+            id:first.save_id,
+            parent:first.save_parent,
+            root:first.project_saveroot,
+            output:first.output_content
+        }
     });
 
     rows.forEach(function(row) {

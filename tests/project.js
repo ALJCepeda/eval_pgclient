@@ -5,9 +5,12 @@ var a = new Project({
 	id:'phpize',
 	platform:'php',
 	tag:'5.6',
-	saveRoot:'izesave',
-	save:'save1',
-	parent:'izesave',
+	save: {
+		id:'save1',
+		parent:'izesave',
+		root:'izesave',
+		output:''
+	},
 	documents: {
 		index: {
 			id:'index',
@@ -21,9 +24,12 @@ var b = new Project({
 	id:'phpize',
 	platform:'php',
 	tag:'5.6',
-	saveRoot:'izesave',
-	save:'save2',
-	parent:'save1',
+	save: {
+		id:'save2',
+		parent:'save1',
+		root:'izesave',
+		output:''
+	},
 	documents: {
 		index: {
 			id:'index',
@@ -37,9 +43,12 @@ var c = new Project({
 	id:'phpize',
 	platform:'php',
 	tag:'5.6',
-	saveRoot:'izesave',
-	save:'save2',
-	parent:'save1',
+	save: {
+		id:'save2',
+		parent:'save1',
+		root:'izesave',
+		output:''
+	},
 	documents: {
 		index: {
 			id:'index',
@@ -51,6 +60,7 @@ var c = new Project({
 
 tape('equal', function(t) {
     t.true(a.equal(b), 'Projects are equal');
+	t.false(a.identical(b), 'Project don\'t have same save info');
     t.false(a.equal(c), 'Projects are not equal, minor difference');
     t.end();
 });
