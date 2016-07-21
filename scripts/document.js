@@ -1,30 +1,41 @@
-var bare = require('bareutil');
-var val = bare.val;
-var obj = bare.obj;
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['bareutil.val', 'bareutil.obj'], factory);
+    } else if (typeof exports === 'object') {
+        var Document = factory(require('bareutil').val, require('bareutil').obj);
+        Document.expose = function(app, express) {
+            app.use('/eval_shared.document.js', express.static(__filename));
+        }
 
-var Document = function(data) {
-    this.id = '';
-    this.extension = '';
-    this.content = '';
+        module.exports = Document;
+    } else {
+        root.eval_shared.Document = factory(root.bareutil.val, root.bareutil.obj);
+    }
+}(this, function (val, obj) {
+    var Document = function(data) {
+        this.id = '';
+        this.extension = '';
+        this.content = '';
 
-    bare.obj.merge(this, data || {});
-};
+        obj.merge(this, data || {});
+    };
 
-Document.prototype.equal = function(b) {
-    return Document.equal(this, b);
-};
+    Document.prototype.equal = function(b) {
+        return Document.equal(this, b);
+    };
 
-Document.fromDict = function(dict) {
-    return obj.reduce(dict, function(result, doc) {
-        result[doc.id] = new Document(doc);
-        return result;
-    }, {});
-};
+    Document.fromDict = function(dict) {
+        return obj.reduce(dict, function(result, doc) {
+            result[doc.id] = new Document(doc);
+            return result;
+        }, {});
+    };
 
-Document.equal = function(a, b) {
-    return  a.id === b.id &&
-            a.extension === b.extension &&
-            a.content === b.content;
-};
+    Document.equal = function(a, b) {
+        return  a.id === b.id &&
+                a.extension === b.extension &&
+                a.content === b.content;
+    };
 
-module.exports = Document;
+    return Document;
+}));
