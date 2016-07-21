@@ -222,12 +222,12 @@ tape('project_save_select', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
-tape('project_insert/project_delete', function(t) {
+tape('project_insert', function(t) {
 	pg.project_insert(	'phpInsertTest',
 						'php',
 						'5.6',
-						'save1')
-	.then(function(count) {
+						'save1'
+	).then(function(count) {
 		t.equal(count, 1, 'Inserted project phpInsertTest');
 		return pg.save_insert( 	'save1',
 								'phpInsertTest');
@@ -247,10 +247,14 @@ tape('project_insert/project_delete', function(t) {
 									'<?php \n\techo \'Hello World!\');');
 	}).then(function(count) {
 		t.equal(count, 1, 'Inserted document helloWorld');
-		return pg.document_delete( 	'phpInsertTest',
-									'save1',
-									'helloWorld');
-	}).then(function(count) {
+	}).catch(t.fail).done(t.end);
+});
+
+tape('project_delete', function(t) {
+	pg.document_delete( 	'phpInsertTest',
+							'save1',
+							'helloWorld'
+	).then(function(count) {
 		t.equal(count, 1, 'Deleted document helloWorld');
 		return pg.document_delete(	'phpInsertTest',
 									'save1',
