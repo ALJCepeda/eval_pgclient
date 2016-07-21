@@ -1,6 +1,7 @@
 SELECT  p.id as project_id,
         p.platform as project_platform,
         p.tag as project_tag,
+        p.saveRoot as project_saveroot,
         s.id as save_id,
         s.parent as save_parent,
         d.id as document_id,

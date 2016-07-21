@@ -1,1 +1,1 @@
-INSERT INTO project ( id, platform, tag, save_root ) VALUES ( $1, $2, $3, $4 );
+INSERT INTO project ( id, platform, tag, saveRoot ) VALUES ( $1, $2, $3, $4 );

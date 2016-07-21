@@ -130,6 +130,7 @@ tape('project_select', function(t) {
 				document_id: 'index',
 				project_id: 'phptest',
 				project_platform: 'php',
+				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
@@ -145,6 +146,7 @@ tape('project_select', function(t) {
 				document_id: 'index',
 				project_id: 'nodejstest',
 				project_platform: 'nodejs',
+				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
@@ -163,6 +165,7 @@ tape('project_save_select', function(t) {
 				document_id: 'index',
 				project_id: 'phptest',
 				project_platform: 'php',
+				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
@@ -178,6 +181,7 @@ tape('project_save_select', function(t) {
 				document_id: 'index',
 				project_id: 'phptest',
 				project_platform: 'php',
+				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test2',
 				save_parent: 'test1'
@@ -193,6 +197,7 @@ tape('project_save_select', function(t) {
 				document_id: 'index',
 				project_id: 'nodejstest',
 				project_platform: 'nodejs',
+				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
@@ -208,6 +213,7 @@ tape('project_save_select', function(t) {
 				document_id: 'index',
 				project_id: 'nodejstest',
 				project_platform: 'nodejs',
+				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test2',
 				save_parent: 'test1'
