@@ -9,4 +9,10 @@ var Document = function(data) {
     bare.obj.merge(this, data || {});
 };
 
+Document.fromArray = function(objs) {
+    return objs.map(function(obj) {
+        return new Document(obj);
+    });
+};
+
 module.exports = Document;

@@ -2,20 +2,18 @@ var bare = require('bareutil');
 var val = bare.val;
 var misc = bare.misc;
 
-var PGClient = require('./pgclient');
-var Project = require('./project');
-var Platform = require('./platform');
-var Execute = require('./execute');
-var Document = require('./document');
+var PGClient = require('./client');
+var Project = require('./../project');
+var Platform = require('./../platform');
+var Execute = require('./../execute');
+var Document = require('./../document');
 
-var PGAgent = function(url) {
+var Agent = function(url) {
     this.pg = new PGClient(url);
     this.randomPossibles = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 };
 
-
-
-PGAgent.prototype.projectInsert = function(project) {
+Agent.prototype.projectInsert = function(project) {
     var self = this;
     return this.pg.project_insert(project.id, project.platform, project.tag, project.saveRoot)
                 .then(function(count) {
@@ -25,13 +23,18 @@ PGAgent.prototype.projectInsert = function(project) {
                 });
 };
 
-PGAgent.prototype.documentInsert = function(project) {
+Agent.prototype.documentInsert = function(project) {
+    var self = this;
     return Promise.all(project.documents.map(function(document) {
-        return self.pg.document_insert(project.id, projec.saveRoot, document.id, document.extension, document.content);
-    }));
+        return self.pg.document_insert(project.id, project.saveRoot, document.id, document.extension, document.content);
+    })).then(function(rows) {
+        return rows.reduce(function(count, inserted) {
+            return count + inserted;
+        }, 0);
+    });
 };
 
-PGAgent.prototype.saveInsert = function(project) {
+Agent.prototype.saveInsert = function(project) {
     var self = this;
     return this.pg.save_id_exists(project.save, project.id).then(function(exists) {
         if(exists === true) {
@@ -44,24 +47,22 @@ PGAgent.prototype.saveInsert = function(project) {
     });
 };
 
-PGAgent.prototype.projectDelete = function(project) {
+Agent.prototype.projectDelete = function(project) {
     var self = this;
-    return Promise.all(project.documents.map(function(document) {
-        return self.pg.save_delete(project.saveRoot, project.id);
-    })).then(function(result) {
+    return self.pg.save_delete(project.saveRoot, project.id).then(function(result) {
         return self.pg.project_delete(project.id);
     });
 };
 
-PGAgent.prototype.projectSelect = function(id) {
-    return this.pg.project_select(id).then(PGAgent.createProject);
+Agent.prototype.projectSelect = function(id) {
+    return this.pg.project_select(id).then(Agent.createProject);
 };
 
-PGAgent.prototype.projectSaveSelect = function(saveID, projectID) {
-    return this.pg.project_save_select(saveID, projectID).then(PGAgent.createProject);
+Agent.prototype.projectSaveSelect = function(saveID, projectID) {
+    return this.pg.project_save_select(saveID, projectID).then(Agent.createProject);
 };
 
-PGAgent.prototype.generateProjectID = function(length, test) {
+Agent.prototype.generateProjectID = function(length, test) {
     var self = this;
     var id = misc.random(length, this.randomPossibles);
 
@@ -74,7 +75,7 @@ PGAgent.prototype.generateProjectID = function(length, test) {
 	});
 };
 
-PGAgent.prototype.generateSaveID = function(projectID, length) {
+Agent.prototype.generateSaveID = function(projectID, length) {
     var self = this;
     var id = misc.random(length, this.randomPossibles);
 
@@ -87,15 +88,15 @@ PGAgent.prototype.generateSaveID = function(projectID, length) {
 	});
 };
 
-PGAgent.prototype.execute = function() {
-    return this.pg.execute().then(PGAgent.createExecute);
+Agent.prototype.execute = function() {
+    return this.pg.execute().then(Agent.createExecute);
 };
 
-PGAgent.prototype.platform = function() {
-    return this.pg.platform().then(PGAgent.createPlatform);
+Agent.prototype.platform = function() {
+    return this.pg.platform().then(Agent.createPlatform);
 };
 
-PGAgent.createDocument = function(row) {
+Agent.createDocument = function(row) {
     return new Document({
         id:row.document_id,
         extension:row.document_extension,
@@ -103,7 +104,7 @@ PGAgent.createDocument = function(row) {
     });
 };
 
-PGAgent.createProject = function(rows) {
+Agent.createProject = function(rows) {
     if(!val.array(rows) || rows.length === 0) {
         return;
     }
@@ -119,13 +120,13 @@ PGAgent.createProject = function(rows) {
     });
 
     rows.forEach(function(row) {
-        project.documents.push(PGAgent.createDocument(row));
+        project.documents.push(Agent.createDocument(row));
     });
 
     return project;
 };
 
-PGAgent.createExecute = function(rows) {
+Agent.createExecute = function(rows) {
     if(!val.array(rows) || rows.length === 0) {
         return;
     }
@@ -143,7 +144,7 @@ PGAgent.createExecute = function(rows) {
     }, {});
 };
 
-PGAgent.createPlatform = function(rows) {
+Agent.createPlatform = function(rows) {
     if(!val.array(rows) || rows.length === 0) {
         return;
     }
@@ -170,4 +171,4 @@ PGAgent.createPlatform = function(rows) {
     }, {});
 };
 
-module.exports = PGAgent;
+module.exports = Agent;

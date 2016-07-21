@@ -1,10 +1,11 @@
-var PGAgent = require('./../scripts/pgagent');
+var Agent = require('./../scripts/pg/agent');
+var Project = require('./../scripts/project');
 
 var Promise = require('bluebird');
 var tape = require('tape');
 var url = 'postgres://vagrant:password@localhost/eval';
 
-var agent = new PGAgent(url);
+var agent = new Agent(url);
 var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
@@ -114,8 +115,35 @@ xtape('generateProjectID', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
-tape('generateSaveID', function(t) {
+xtape('generateSaveID', function(t) {
 	agent.generateSaveID('phptest', 8).then(function(id) {
 		t.ok(id, 'Save ID was generated');
 	}).catch(t.fail).done(t.end);
+});
+
+var phpProject = new Project({
+	id:'phpize',
+	platform:'php',
+	tag:'5.6',
+	saveRoot:'izesave',
+	save:'izesave',
+	documents:[
+		{	id:'index',
+			extension:'php',
+			content:'Does it really matter?'
+		}
+	]
+});
+
+tape('projectInsert', function(t) {
+	agent.projectInsert(phpProject).then(function(count) {
+		t.equal(count, 1, 'Inserted Project \'phpize\'');
+	}).catch(t.fail).done(t.end);
+});
+
+tape('projectDelete', function(t) {
+	agent.projectDelete(phpProject).then(function(count) {
+		t.equal(count, 1, 'Deleted Project \'phpize\'');
+		t.end();
+	}).catch(t.fail);
 });

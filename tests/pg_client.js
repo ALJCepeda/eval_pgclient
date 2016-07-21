@@ -1,10 +1,10 @@
-var PGClient = require('./../scripts/pgclient');
+var Client = require('./../scripts/pg/client');
 
 var Promise = require('bluebird');
 var tape = require('tape');
 var url = 'postgres://vagrant:password@localhost/eval';
 
-var pg = new PGClient(url);
+var pg = new Client(url);
 var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };

@@ -11,7 +11,7 @@ var Project = function(params) {
     this.parent = '';
 
     this.documents = [];
-    bare.obj.merge(this, params || {}, { documents:Document.fromObjs });
+    bare.obj.merge(this, params || {}, { documents:Document.fromArray });
 };
 
 module.exports = Project;
