@@ -6,6 +6,7 @@ var Project = function(params) {
     this.platform = '';
     this.tag = '';
 
+    this.saveRoot = '';
     this.save = '';
     this.parent = '';
 
@@ -20,6 +21,7 @@ Project.fromRow = function(row) {
     project.platform = row.project_platform;
     project.tag = row.project_tag;
 
+    project.saveRoot = row.project_saveRoot;
     project.save = row.save_id;
     project.parent = row.save_parent;
 
