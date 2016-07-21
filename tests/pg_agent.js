@@ -156,9 +156,30 @@ var save1Project = new Project({
 	]
 });
 
-tape('saveInsert', function(t) {
+var save2Project = new Project({
+	id:'phpize',
+	platform:'php',
+	tag:'5.6',
+	saveRoot:'izesave',
+	save:'save2',
+	parent:'save1',
+	documents:[
+		{	id:'index',
+			extension:'php',
+			content:'Yet another save for phpize'
+		}
+	]
+});
+
+tape('save1Insert', function(t) {
 	agent.saveInsert(save1Project).then(function(count) {
 		t.equal(count, 1, 'Inserted save \'save1\' for Project \'phpize\'');
+	}).catch(t.fail).done(t.end);
+});
+
+tape('save2Insert', function(t) {
+	agent.saveInsert(save2Project).then(function(count) {
+		t.equal(count, 1, 'Inserted save \'save2\' for Project \'phpize\'');
 	}).catch(t.fail).done(t.end);
 });
 
