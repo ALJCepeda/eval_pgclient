@@ -26,7 +26,7 @@ Agent.prototype.projectInsert = function(project) {
 Agent.prototype.documentInsert = function(project) {
     var self = this;
     return Promise.all(project.documents.map(function(document) {
-        return self.pg.document_insert(project.id, project.saveRoot, document.id, document.extension, document.content);
+        return self.pg.document_insert(project.id, project.save, document.id, document.extension, document.content);
     })).then(function(rows) {
         return rows.reduce(function(count, inserted) {
             return count + inserted;
@@ -49,7 +49,7 @@ Agent.prototype.saveInsert = function(project) {
 
 Agent.prototype.projectDelete = function(project) {
     var self = this;
-    return self.pg.save_delete(project.saveRoot, project.id).then(function(result) {
+    return self.pg.save_delete(project.id).then(function(result) {
         return self.pg.project_delete(project.id);
     });
 };

@@ -141,6 +141,27 @@ tape('projectInsert', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
+var save1Project = new Project({
+	id:'phpize',
+	platform:'php',
+	tag:'5.6',
+	saveRoot:'izesave',
+	save:'save1',
+	parent:'izesave',
+	documents:[
+		{	id:'index',
+			extension:'php',
+			content:'This is a save for phpize'
+		}
+	]
+});
+
+tape('saveInsert', function(t) {
+	agent.saveInsert(save1Project).then(function(count) {
+		t.equal(count, 1, 'Inserted save \'save1\' for Project \'phpize\'');
+	}).catch(t.fail).done(t.end);
+});
+
 tape('projectDelete', function(t) {
 	agent.projectDelete(phpProject).then(function(count) {
 		t.equal(count, 1, 'Deleted Project \'phpize\'');

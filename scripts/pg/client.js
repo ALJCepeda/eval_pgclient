@@ -97,8 +97,8 @@ Client.prototype.save_parent_insert = function(saveID, projectID, parentID) {
 				.then(countRows);
 };
 
-Client.prototype.save_delete = function(saveID, projectID) {
-	return this.query('save_delete', [ saveID, projectID ])
+Client.prototype.save_delete = function(projectID) {
+	return this.query('save_delete', [ projectID ])
 				.then(countRows);
 };
 

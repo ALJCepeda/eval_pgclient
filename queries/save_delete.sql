@@ -1,1 +1,1 @@
-DELETE FROM save WHERE id = $1 AND project = $2;
+DELETE FROM save WHERE project = $1;
