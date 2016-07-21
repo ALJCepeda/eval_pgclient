@@ -17,7 +17,6 @@ var PGClient = function(url) {
 /* PSQL related semantic closures */
 var countRows = function(result) { return result.rowCount; };
 var getRows = function(result) { return result.rows; };
-var getFirstRow = function(result) { return result.rows[0]; };
 
 /* Reads SQL file and performs query with parameterized args */
 PGClient.prototype.query = function(name, args) {
@@ -49,7 +48,7 @@ PGClient.prototype.project_id_exists = function(id) {
 				.then(function(count) {
 					return count > 0;
 			});
-}
+};
 
 PGClient.prototype.project_insert = function(id, platform, tag, save_root) {
 	return this.query('project_insert', [ id, platform, tag, save_root ])
@@ -71,12 +70,20 @@ PGClient.prototype.project_ids_select = function() {
 
 PGClient.prototype.project_select = function(projectID) {
     return this.query('project_select', [ projectID ])
-                .then(getFirstRow);
+                .then(getRows);
 };
 
 PGClient.prototype.project_save_select = function(projectID, saveID) {
     return this.query('project_save_select', [ projectID, saveID ])
-            	.then(getFirstRow);
+            	.then(getRows);
+};
+
+PGClient.prototype.save_id_exists = function(id) {
+	return this.query('save_id_exists', [id])
+				.then(countRows)
+				.then(function(count) {
+					return count > 0;
+			});
 };
 
 PGClient.prototype.save_insert = function(saveID, projectID) {
