@@ -10,7 +10,7 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
-xtape('execute', function(t) {
+tape('execute', function(t) {
     agent.execute().then(function(executeInfo) {
         t.deepEqual(
             executeInfo,
@@ -38,7 +38,7 @@ xtape('execute', function(t) {
     }).catch(t.fail).done(t.end);
 });
 
-xtape('platform', function(t) {
+tape('platform', function(t) {
     agent.platform().then(function(platformInfo) {
         t.deepEqual(
             platformInfo,
@@ -70,7 +70,7 @@ xtape('platform', function(t) {
     }).catch(t.fail).done(t.end);
 });
 
-xtape('projectSelect', function(t) {
+tape('projectSelect', function(t) {
     agent.projectSelect('phptest').then(function(project) {
         t.deepEqual(
             project,
@@ -80,17 +80,17 @@ xtape('projectSelect', function(t) {
                 saveRoot: 'test1',
                 save: 'test1',
                 parent: null,
-                documents:[
-                    {   id: 'index',
-                        extension: 'php',
-                        content: '<?php echo "This is php test1";' }
-                ]
+                documents:{
+                   index: {	id: 'index',
+                        	extension: 'php',
+                        	content: '<?php echo "This is php test1";' }
+                }
             }, 'Selected Project \'phptest\''
         );
     }).catch(t.fail).done(t.end);
 });
 
-xtape('projectSaveSelect', function(t) {
+tape('projectSaveSelect', function(t) {
     agent.projectSaveSelect('test2', 'phptest').then(function(project) {
         t.deepEqual(
 			project,
@@ -100,22 +100,22 @@ xtape('projectSaveSelect', function(t) {
   				saveRoot: 'test1',
   				save: 'test2',
   				parent: 'test1',
-  				documents: [
-					{ 	id: 'index',
-       					extension: 'php',
-       					content: '<?php echo "This is php test2";' }
-				]
+  				documents: {
+					index: { 	id: 'index',
+       							extension: 'php',
+       							content: '<?php echo "This is php test2";' }
+				}
 		}, 'Selected save \'test2\' of project \'phptest\'');
     }).catch(t.fail).done(t.end);
 });
 
-xtape('generateProjectID', function(t) {
+tape('generateProjectID', function(t) {
 	agent.generateProjectID(8, 'phptest').then(function(id) {
 		t.ok(id, 'Project ID was generated');
 	}).catch(t.fail).done(t.end);
 });
 
-xtape('generateSaveID', function(t) {
+tape('generateSaveID', function(t) {
 	agent.generateSaveID('phptest', 8).then(function(id) {
 		t.ok(id, 'Save ID was generated');
 	}).catch(t.fail).done(t.end);
@@ -127,12 +127,13 @@ var phpProject = new Project({
 	tag:'5.6',
 	saveRoot:'izesave',
 	save:'izesave',
-	documents:[
-		{	id:'index',
+	documents: {
+		index: {
+			id:'index',
 			extension:'php',
 			content:'Does it really matter?'
 		}
-	]
+	}
 });
 
 tape('projectInsert', function(t) {
@@ -148,12 +149,13 @@ var save1Project = new Project({
 	saveRoot:'izesave',
 	save:'save1',
 	parent:'izesave',
-	documents:[
-		{	id:'index',
+	documents: {
+		index: {
+			id:'index',
 			extension:'php',
 			content:'This is a save for phpize'
 		}
-	]
+	}
 });
 
 var save2Project = new Project({
@@ -163,12 +165,13 @@ var save2Project = new Project({
 	saveRoot:'izesave',
 	save:'save2',
 	parent:'save1',
-	documents:[
-		{	id:'index',
+	documents: {
+		index: {
+			id:'index',
 			extension:'php',
 			content:'Yet another save for phpize'
 		}
-	]
+	}
 });
 
 tape('save1Insert', function(t) {

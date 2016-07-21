@@ -1,6 +1,7 @@
 var bare = require('bareutil');
 var val = bare.val;
 var misc = bare.misc;
+var obj = bare.obj;
 
 var PGClient = require('./client');
 var Project = require('./../project');
@@ -25,8 +26,9 @@ Agent.prototype.projectInsert = function(project) {
 
 Agent.prototype.documentInsert = function(project) {
     var self = this;
-    return Promise.all(project.documents.map(function(document) {
-        return self.pg.document_insert(project.id, project.save, document.id, document.extension, document.content);
+
+    return Promise.all(obj.array_map(project.documents, function(doc) {
+        return self.pg.document_insert(project.id, project.save, doc.id, doc.extension, doc.content);
     })).then(function(rows) {
         return rows.reduce(function(count, inserted) {
             return count + inserted;
@@ -120,7 +122,7 @@ Agent.createProject = function(rows) {
     });
 
     rows.forEach(function(row) {
-        project.documents.push(Agent.createDocument(row));
+        project.documents[row.document_id] = Agent.createDocument(row);
     });
 
     return project;
