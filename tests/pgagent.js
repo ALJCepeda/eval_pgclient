@@ -9,7 +9,7 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
-tape('projectSelect', function(t) {
+xtape('projectSelect', function(t) {
     agent.projectSelect('phptest').then(function(project) {
         t.deepEqual(
             project,
@@ -26,5 +26,34 @@ tape('projectSelect', function(t) {
                 ]
             }, 'Selected phptest Project'
         );
-    });
+    }).catch(t.fail).done(t.end);
+});
+
+tape('execute', function(t) {
+    agent.execute().then(function(executeInfo) {
+        t.deepEqual(
+            executeInfo,
+            {   php: {  latest: {   platform: 'php',
+                                    tag: 'latest',
+                                    compile: null,
+                                    run: 'php index.php' }
+                },
+                nodejs: {   latest: {   platform: 'nodejs',
+                                        tag: 'latest',
+                                        compile: null,
+                                        run: 'node index.js' }
+                },
+
+                haskell: {  latest: {   platform: 'haskell',
+                                        tag: 'latest',
+                                        compile: 'ghc -o app index.hs',
+                                        run: './app'    }
+                },
+                pascal: {   latest: {   platform: 'pascal',
+                                        tag: 'latest',
+                                        compile: 'fpc index.pas',
+                                        run: './index'  }
+                }
+        }, 'Selected execute info' );
+    }).catch(t.fail).done(t.end);
 });

@@ -88,11 +88,11 @@ PGAgent.prototype.generateSaveID = function(projectID, length) {
 };
 
 PGAgent.prototype.execute = function() {
-    return this.pg.execute().then(this.createExecute);
+    return this.pg.execute().then(PGAgent.createExecute);
 };
 
 PGAgent.prototype.platform = function() {
-    return this.pg.platform().then(this.createPlatform);
+    return this.pg.platform().then(PGAgent.createPlatform);
 };
 
 PGAgent.createDocument = function(row) {
@@ -126,10 +126,14 @@ PGAgent.createProject = function(rows) {
 };
 
 PGAgent.createExecute = function(rows) {
+    if(!val.array(rows) || rows.length === 0) {
+        return;
+    }
+
     return rows.reduce(function(dict, row) {
         var platform = row.platform;
-
-        if(dict.undefined(info[platform]) === true) {
+        
+        if(val.undefined(dict[platform]) === true) {
             dict[platform] = {};
         }
 
@@ -140,6 +144,10 @@ PGAgent.createExecute = function(rows) {
 };
 
 PGAgent.createPlatform = function(rows) {
+    if(!val.array(rows) || rows.length === 0) {
+        return;
+    }
+
     return rows.reduce(function(dict, row) {
         var id = row.platform_id;
         var tag = row.version_tag;
