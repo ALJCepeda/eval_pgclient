@@ -9,26 +9,6 @@ var xtape = function(name) {
 	console.log('Test (' + name + ') manually avoided');
 };
 
-xtape('projectSelect', function(t) {
-    agent.projectSelect('phptest').then(function(project) {
-        t.deepEqual(
-            project,
-            {   id: 'phptest',
-                platform: 'php',
-                tag: 'latest',
-                saveRoot: 'test1',
-                save: 'test1',
-                parent: null,
-                documents:[
-                    {   id: 'index',
-                        extension: 'php',
-                        content: '<?php echo "This is php test1";' }
-                ]
-            }, 'Selected phptest Project'
-        );
-    }).catch(t.fail).done(t.end);
-});
-
 xtape('execute', function(t) {
     agent.execute().then(function(executeInfo) {
         t.deepEqual(
@@ -57,7 +37,7 @@ xtape('execute', function(t) {
     }).catch(t.fail).done(t.end);
 });
 
-tape('platform', function(t) {
+xtape('platform', function(t) {
     agent.platform().then(function(platformInfo) {
         t.deepEqual(
             platformInfo,
@@ -88,3 +68,42 @@ tape('platform', function(t) {
         }, 'Selected platform info');
     }).catch(t.fail).done(t.end);
 });
+
+xtape('projectSelect', function(t) {
+    agent.projectSelect('phptest').then(function(project) {
+        t.deepEqual(
+            project,
+            {   id: 'phptest',
+                platform: 'php',
+                tag: 'latest',
+                saveRoot: 'test1',
+                save: 'test1',
+                parent: null,
+                documents:[
+                    {   id: 'index',
+                        extension: 'php',
+                        content: '<?php echo "This is php test1";' }
+                ]
+            }, 'Selected Project \'phptest\''
+        );
+    }).catch(t.fail).done(t.end);
+});
+
+tape('projectSaveSelect', function(t) {
+    agent.projectSaveSelect('test2', 'phptest').then(function(project) {
+        t.deepEqual(
+			project,
+			{ 	id: 'phptest',
+  				platform: 'php',
+  				tag: 'latest',
+  				saveRoot: 'test1',
+  				save: 'test2',
+  				parent: 'test1',
+  				documents: [
+					{ 	id: 'index',
+       					extension: 'php',
+       					content: '<?php echo "This is php test2";' }
+				]
+		}, 'Selected save \'test2\' of project \'phptest\'');
+    }).catch(t.fail).done(t.end);;
+})

@@ -73,8 +73,8 @@ PGClient.prototype.project_select = function(projectID) {
                 .then(getRows);
 };
 
-PGClient.prototype.project_save_select = function(projectID, saveID) {
-    return this.query('project_save_select', [ projectID, saveID ])
+PGClient.prototype.project_save_select = function(saveID, projectID) {
+    return this.query('project_save_select', [ saveID, projectID ])
             	.then(getRows);
 };
 

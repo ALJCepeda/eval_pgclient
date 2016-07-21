@@ -57,8 +57,8 @@ PGAgent.prototype.projectSelect = function(id) {
     return this.pg.project_select(id).then(PGAgent.createProject);
 };
 
-PGAgent.prototype.projectSelectSave = function(projectID, saveID) {
-    return this.pg.project_select_save(projectID, saveID).then(this.createProject);
+PGAgent.prototype.projectSaveSelect = function(saveID, projectID) {
+    return this.pg.project_save_select(saveID, projectID).then(PGAgent.createProject);
 };
 
 PGAgent.prototype.generateProjectID = function(length) {
