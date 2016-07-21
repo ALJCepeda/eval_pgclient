@@ -89,7 +89,7 @@ xtape('projectSelect', function(t) {
     }).catch(t.fail).done(t.end);
 });
 
-tape('projectSaveSelect', function(t) {
+xtape('projectSaveSelect', function(t) {
     agent.projectSaveSelect('test2', 'phptest').then(function(project) {
         t.deepEqual(
 			project,
@@ -105,5 +105,17 @@ tape('projectSaveSelect', function(t) {
        					content: '<?php echo "This is php test2";' }
 				]
 		}, 'Selected save \'test2\' of project \'phptest\'');
-    }).catch(t.fail).done(t.end);;
-})
+    }).catch(t.fail).done(t.end);
+});
+
+xtape('generateProjectID', function(t) {
+	agent.generateProjectID(8, 'phptest').then(function(id) {
+		t.ok(id, 'Project ID was generated');
+	}).catch(t.fail).done(t.end);
+});
+
+tape('generateSaveID', function(t) {
+	agent.generateSaveID('phptest', 8).then(function(id) {
+		t.ok(id, 'Save ID was generated');
+	}).catch(t.fail).done(t.end);
+});

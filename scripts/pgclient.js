@@ -91,6 +91,11 @@ PGClient.prototype.save_insert = function(saveID, projectID) {
 				.then(countRows);
 };
 
+PGClient.prototype.save_parent_insert = function(saveID, projectID, parentID) {
+	return this.query('save_parent_insert', [ saveID, projectID, parentID ])
+				.then(countRows);
+};
+
 PGClient.prototype.save_delete = function(saveID, projectID) {
 	return this.query('save_delete', [ saveID, projectID ])
 				.then(countRows);

@@ -61,7 +61,7 @@ PGAgent.prototype.projectSaveSelect = function(saveID, projectID) {
     return this.pg.project_save_select(saveID, projectID).then(PGAgent.createProject);
 };
 
-PGAgent.prototype.generateProjectID = function(length) {
+PGAgent.prototype.generateProjectID = function(length, test) {
     var self = this;
     var id = misc.random(length, this.randomPossibles);
 
