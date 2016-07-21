@@ -125,7 +125,7 @@ tape('project_select', function(t) {
 	pg.project_select('phptest').then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	document_content: '<?php echo "This is php test1";',
+			[{ 	document_content: '<?php echo "This is php test1";',
 				document_extension: 'php',
 				document_id: 'index',
 				project_id: 'phptest',
@@ -134,14 +134,14 @@ tape('project_select', function(t) {
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
-			}, 'Selected phptest project'
+			}], 'Selected phptest project'
 		);
 
 		return pg.project_select('nodejstest');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	document_content: 'console.log("This is nodejs test1");',
+			[{ 	document_content: 'console.log("This is nodejs test1");',
 				document_extension: 'js',
 				document_id: 'index',
 				project_id: 'nodejstest',
@@ -150,17 +150,17 @@ tape('project_select', function(t) {
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
-			}, 'Selected nodejstest project'
+			}], 'Selected nodejstest project'
 		);
 
 	}).catch(t.fail).done(t.end);
 });
 
 tape('project_save_select', function(t) {
-	pg.project_save_select('phptest', 'test1').then(function(project) {
+	pg.project_save_select('test1', 'phptest').then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	document_content: '<?php echo "This is php test1";',
+			[{ 	document_content: '<?php echo "This is php test1";',
 				document_extension: 'php',
 				document_id: 'index',
 				project_id: 'phptest',
@@ -169,14 +169,14 @@ tape('project_save_select', function(t) {
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
-			}, 'PHP project test1 save'
+			}], 'PHP project test1 save'
 		);
 
-		return pg.project_save_select('phptest', 'test2');
+		return pg.project_save_select('test2', 'phptest');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	document_content: '<?php echo "This is php test2";',
+			[{ 	document_content: '<?php echo "This is php test2";',
 				document_extension: 'php',
 				document_id: 'index',
 				project_id: 'phptest',
@@ -185,14 +185,14 @@ tape('project_save_select', function(t) {
 				project_tag: 'latest',
 				save_id: 'test2',
 				save_parent: 'test1'
-			}, 'PHP project test2 save'
+			}], 'PHP project test2 save'
 		);
 
-		return pg.project_save_select('nodejstest', 'test1');
+		return pg.project_save_select('test1', 'nodejstest');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	document_content: 'console.log("This is nodejs test1");',
+			[{ 	document_content: 'console.log("This is nodejs test1");',
 				document_extension: 'js',
 				document_id: 'index',
 				project_id: 'nodejstest',
@@ -201,14 +201,14 @@ tape('project_save_select', function(t) {
 				project_tag: 'latest',
 				save_id: 'test1',
 				save_parent: null
-			}, 'NodeJS project test1 save'
+			}], 'NodeJS project test1 save'
 		);
 
-		return pg.project_save_select('nodejstest', 'test2');
+		return pg.project_save_select('test2', 'nodejstest');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
-			{ 	document_content: 'console.log("This is nodejs test2");',
+			[{ 	document_content: 'console.log("This is nodejs test2");',
 				document_extension: 'js',
 				document_id: 'index',
 				project_id: 'nodejstest',
@@ -217,7 +217,7 @@ tape('project_save_select', function(t) {
 				project_tag: 'latest',
 				save_id: 'test2',
 				save_parent: 'test1'
-			}, 'NodeJS project test2 save'
+			}], 'NodeJS project test2 save'
 		);
 	}).catch(t.fail).done(t.end);
 });
