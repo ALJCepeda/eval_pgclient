@@ -29,7 +29,7 @@ xtape('projectSelect', function(t) {
     }).catch(t.fail).done(t.end);
 });
 
-tape('execute', function(t) {
+xtape('execute', function(t) {
     agent.execute().then(function(executeInfo) {
         t.deepEqual(
             executeInfo,
@@ -43,7 +43,6 @@ tape('execute', function(t) {
                                         compile: null,
                                         run: 'node index.js' }
                 },
-
                 haskell: {  latest: {   platform: 'haskell',
                                         tag: 'latest',
                                         compile: 'ghc -o app index.hs',
@@ -55,5 +54,37 @@ tape('execute', function(t) {
                                         run: './index'  }
                 }
         }, 'Selected execute info' );
+    }).catch(t.fail).done(t.end);
+});
+
+tape('platform', function(t) {
+    agent.platform().then(function(platformInfo) {
+        t.deepEqual(
+            platformInfo,
+            {   php: {  name: 'PHP',
+                        aceMode: 'php',
+                        extension: 'php',
+                        tags: [ 'latest', '5.5', '5.4', '5.6' ],
+                        demo: ''
+                },
+                nodejs: {   name: 'NodeJS',
+                            aceMode: 'javascript',
+                            extension: 'js',
+                            tags: [ 'latest', '0.12.7' ],
+                            demo: ''
+                },
+                haskell: {  name: 'Haskell',
+                            aceMode: 'haskell',
+                            extension: 'hs',
+                            tags: [ 'latest' ],
+                            demo: ''
+                },
+                pascal: {   name: 'Pascal',
+                            aceMode: 'pascal',
+                            extension: 'pas',
+                            tags: [ 'latest' ],
+                            demo: ''
+                }
+        }, 'Selected platform info');
     }).catch(t.fail).done(t.end);
 });

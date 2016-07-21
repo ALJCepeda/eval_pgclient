@@ -132,7 +132,7 @@ PGAgent.createExecute = function(rows) {
 
     return rows.reduce(function(dict, row) {
         var platform = row.platform;
-        
+
         if(val.undefined(dict[platform]) === true) {
             dict[platform] = {};
         }
@@ -163,7 +163,7 @@ PGAgent.createPlatform = function(rows) {
 
         dict[id].tags.push(tag);
         if(val.defined(demo)) {
-            info[id].demo[tag] = demo;
+            dict[id].demo[tag] = demo;
         }
 
         return dict;
