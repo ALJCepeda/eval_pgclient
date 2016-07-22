@@ -23,7 +23,11 @@
     Document.prototype.equal = function(b) {
         return Document.equal(this, b);
     };
-
+    Document.prototype.valid = function(b) {
+        return  val.string(this.id)         && this.id !== '' &&
+                val.string(this.extension)  && this.extension !== '' &&
+                val.string(this.content)    && this.content !== '';
+    };
     Document.fromDict = function(dict) {
         return obj.reduce(dict, function(result, doc) {
             result[doc.id] = new Document(doc);

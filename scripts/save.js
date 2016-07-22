@@ -1,17 +1,18 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['bareutil.obj'], factory);
+        define(['bareutil.obj', 'bareutil.val'], factory);
     } else if (typeof exports === 'object') {
-        var Save = factory(require('bareutil').obj);
+        var bare = require('bareutil');
+        var Save = factory(bare.obj, bare.val);
         Save.expose = function(app, express) {
             app.use('/eval_shared.save.js', express.static(__filename));
         }
 
         module.exports = Save;
     } else {
-        root.eval_shared.Save = factory(root.bareutil.obj);
+        root.eval_shared.Save = factory(root.bareutil.obj, root.bareutil.val);
     }
-}(this, function (obj) {
+}(this, function (obj, val) {
     var Save = function(data) {
         this.id = '';
         this.root = '';
@@ -24,7 +25,14 @@
     Save.prototype.equal = function(b) {
         return Save.equal(this, b);
     };
+    Save.prototype.valid = function() {
+        return  val.string(this.id)     && this.id.length === Save.IDLength &&
+                val.string(this.root)   && this.root.length === Save.IDLength &&
+                val.string(this.parent) && (this.parent === '' || this.parent.length === Save.IDLength) &&
+                val.string(val.output);
+    };
 
+    Save.IDLength = 8;
     Save.create = function(data) {
         return new Save(data);
     };

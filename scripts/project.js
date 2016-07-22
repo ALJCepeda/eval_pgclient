@@ -1,17 +1,21 @@
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['bareutil.obj', 'eval_shared.save', 'eval_shared.document'], factory);
+        define(['bareutil.obj', 'bareutil.val', 'eval_shared.save', 'eval_shared.document'], factory);
     } else if (typeof exports === 'object') {
-        var Project = factory(require('bareutil').obj, require('./save'), require('./document'));
+        var bare = require('bareutil');
+        var Project = factory(bare.obj, bare.val, require('./save'), require('./document'));
         Project.expose = function(app, express) {
             app.use('/eval_shared.project.js', express.static(__filename));
         }
 
         module.exports = Project;
     } else {
-        root.eval_shared.Project = factory(root.bareutil.obj, root.eval_shared.Save, root.eval_shared.Document);
+        root.eval_shared.Project = factory( root.bareutil.obj,
+                                            root.bareutil.val,
+                                            root.eval_shared.Save,
+                                            root.eval_shared.Document);
     }
-}(this, function (obj, Save, Document) {
+}(this, function (obj, val, Save, Document) {
     var Project = function(params) {
         this.id = '';
         this.platform = '';
@@ -29,7 +33,29 @@
     Project.prototype.identical = function(b) {
         return Project.identical(this, b);
     };
+    Project.prototype.valid = function(action) {
+        if( val.string(this.id)         && this.id.length === Project.IDLength &&
+            val.string(this.platform)   && this.platform !== '' &&
+            val.string(this.tag)        && this.tag !== '' ) {
 
+            var hasIndex = false;
+            var docsValid = obj.every(this.documents, function(doc, docID) {
+                if(docID === 'index') { hasIndex = true; }
+                return doc.valid();
+            });
+
+            var saveValid = true;
+            if(action === 'insert') {
+                saveValid = this.save.valid();
+            }
+
+            return docsValid && hasIndex && saveValid;
+        }
+
+        return false;
+    };
+
+    Project.IDLength = 8;
     Project.equal = function(a, b) {
         if( a.id !== b.id ||
             a.platform !== b.platform ||
@@ -38,7 +64,8 @@
             }
 
         for(var docID in a.documents) {
-            if(a.documents[docID].equal(b.documents[docID]) === false) {
+            if( val.undefined(b.documents[docID]) === true ||
+                a.documents[docID].equal(b.documents[docID]) === false ) {
                 return false;
             }
         }
