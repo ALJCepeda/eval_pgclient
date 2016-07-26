@@ -128,12 +128,12 @@ tape('project_select', function(t) {
 			[{ 	document_content: '<?php echo "This is php test1";',
 				document_extension: 'php',
 				document_id: 'index',
-				output_content: 'This is php test1',
 				project_id: 'phptest',
 				project_platform: 'php',
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
+				save_output: 'This is php test1',
 				save_parent: null
 			}], 'Selected phptest project'
 		);
@@ -145,12 +145,12 @@ tape('project_select', function(t) {
 			[{ 	document_content: 'console.log("This is nodejs test1");',
 				document_extension: 'js',
 				document_id: 'index',
-				output_content: 'This is nodejs test1',
 				project_id: 'nodejstest',
 				project_platform: 'nodejs',
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
+				save_output: 'This is nodejs test1',
 				save_parent: null
 			}], 'Selected nodejstest project'
 		);
@@ -165,12 +165,12 @@ tape('project_save_select', function(t) {
 			[{ 	document_content: '<?php echo "This is php test1";',
 				document_extension: 'php',
 				document_id: 'index',
-				output_content: 'This is php test1',
 				project_id: 'phptest',
 				project_platform: 'php',
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
+				save_output: 'This is php test1',
 				save_parent: null
 			}], 'PHP project test1 save'
 		);
@@ -182,12 +182,12 @@ tape('project_save_select', function(t) {
 			[{ 	document_content: '<?php echo "This is php test2";',
 				document_extension: 'php',
 				document_id: 'index',
-				output_content: 'This is php test2',
 				project_id: 'phptest',
 				project_platform: 'php',
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test2',
+				save_output: 'This is php test2',
 				save_parent: 'test1'
 			}], 'PHP project test2 save'
 		);
@@ -199,12 +199,12 @@ tape('project_save_select', function(t) {
 			[{ 	document_content: 'console.log("This is nodejs test1");',
 				document_extension: 'js',
 				document_id: 'index',
-				output_content: 'This is nodejs test1',
 				project_id: 'nodejstest',
 				project_platform: 'nodejs',
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
+				save_output: 'This is nodejs test1',
 				save_parent: null
 			}], 'NodeJS project test1 save'
 		);
@@ -216,12 +216,12 @@ tape('project_save_select', function(t) {
 			[{ 	document_content: 'console.log("This is nodejs test2");',
 				document_extension: 'js',
 				document_id: 'index',
-				output_content: 'This is nodejs test2',
 				project_id: 'nodejstest',
 				project_platform: 'nodejs',
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test2',
+				save_output: 'This is nodejs test2',
 				save_parent: 'test1'
 			}], 'NodeJS project test2 save'
 		);
@@ -235,8 +235,9 @@ tape('project_insert', function(t) {
 						'save1'
 	).then(function(count) {
 		t.equal(count, 1, 'Inserted project phpInsertTest');
-		return pg.save_insert( 	'save1',
-								'phpInsertTest');
+		return pg.save_insert( 	'phpInsertTest',
+								'save1',
+								'Hello World!');
 	}).then(function(count) {
 		t.equal(count, 1, 'Inserted save save1');
 		return pg.document_insert(	'phpInsertTest',
