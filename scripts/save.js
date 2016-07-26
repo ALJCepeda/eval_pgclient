@@ -22,6 +22,9 @@
         obj.merge(this, data || {});
     };
 
+    Save.prototype.isRoot = function() {
+        return this.valid() && this.root === this.id && this.parent === '';
+    };
     Save.prototype.equal = function(b) {
         return Save.equal(this, b);
     };
@@ -29,7 +32,7 @@
         return  val.string(this.id)     && this.id.length === Save.IDLength &&
                 val.string(this.root)   && this.root.length === Save.IDLength &&
                 val.string(this.parent) && (this.parent === '' || this.parent.length === Save.IDLength) &&
-                val.string(val.output);
+                val.string(this.output);
     };
 
     Save.IDLength = 8;

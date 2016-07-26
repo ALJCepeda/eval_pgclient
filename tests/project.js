@@ -58,7 +58,7 @@ var c = new Project({
 	}
 });
 
-tape('equal', function(t) {
+/*tape('equal', function(t) {
     t.true(a.equal(b), 'Projects are equal');
 	t.false(a.identical(b), 'Project don\'t have same save info');
     t.false(a.equal(c), 'Projects are not equal, minor difference');
@@ -67,4 +67,15 @@ tape('equal', function(t) {
 	t.false(b.valid('insert'), 'Project B is not valid for inserting into DB');
 	t.false(c.valid(), 'Project C does not contain index file');
     t.end();
+});*/
+
+var case1 = new Project({ 	id: '0mLmz5yi', platform: 'nodejs', tag: 'latest',
+  			 	save: { id: '0oAcp8ol', root: '0oAcp8ol', parent: '', output: '' },
+  	 			documents:
+   					{ index: { id: 'index', extension: 'js', content: 'console.log(\'Hello NodeJS!\')' } }
 });
+
+tape('cases', function(t) {
+	t.true(case1.valid('insert'), 'Case1 use to be an invalid insert');
+	t.end();
+})

@@ -27,6 +27,9 @@
         obj.merge(this, params || {}, { documents:Document.fromDict, save:Save.create });
     };
 
+    Project.prototype.hasRecord = function() {
+        return this.valid() && this.id !== '' && this.save.valid();
+    };
     Project.prototype.equal = function(b) {
         return Project.equal(this, b);
     };
@@ -34,8 +37,7 @@
         return Project.identical(this, b);
     };
     Project.prototype.valid = function(action) {
-        if( val.string(this.id)         && this.id.length === Project.IDLength &&
-            val.string(this.platform)   && this.platform !== '' &&
+        if( val.string(this.platform)   && this.platform !== '' &&
             val.string(this.tag)        && this.tag !== '' ) {
 
             var hasIndex = false;
@@ -44,12 +46,15 @@
                 return doc.valid();
             });
 
-            var saveValid = true;
+            var insertValid = true;
             if(action === 'insert') {
-                saveValid = this.save.valid();
+                insertValid =   val.defined(this.save) &&
+                                this.save.valid() &&
+                                val.string(this.id) &&
+                                this.id.length === Project.IDLength;
             }
 
-            return docsValid && hasIndex && saveValid;
+            return docsValid && hasIndex && insertValid;
         }
 
         return false;
