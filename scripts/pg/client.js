@@ -74,8 +74,8 @@ Client.prototype.project_select = function(projectID) {
                 .then(getRows);
 };
 
-Client.prototype.project_save_select = function(saveID, projectID) {
-    return this.query('project_save_select', [ saveID, projectID ])
+Client.prototype.project_save_select = function(projectID, saveID) {
+    return this.query('project_save_select', [ projectID, saveID ])
             	.then(getRows);
 };
 

@@ -80,7 +80,7 @@ tape('projectSelect', function(t) {
 				save: {
 					id: 'test1',
 					root: 'test1',
-					parent: null,
+					parent: '',
 					stdout: 'This is php test1',
 					stderr: ''
 				},
@@ -95,7 +95,7 @@ tape('projectSelect', function(t) {
 });
 
 tape('projectSaveSelect', function(t) {
-    agent.projectSaveSelect('test2', 'phptest').then(function(project) {
+    agent.projectSaveSelect('phptest', 'test2').then(function(project) {
         t.deepEqual(
 			project,
 			{ 	id: 'phptest',
@@ -115,6 +115,12 @@ tape('projectSaveSelect', function(t) {
 				}
 		}, 'Selected save \'test2\' of project \'phptest\'');
     }).catch(t.fail).done(t.end);
+});
+
+tape('projectSaveSelect - not found', function(t) {
+	agent.projectSaveSelect('phptest', 'testnone').then(function(project) {
+		t.false(project, 'SaveID not found, project is false');
+	});
 });
 
 tape('generateProjectID', function(t) {

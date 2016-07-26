@@ -161,7 +161,7 @@ tape('project_select', function(t) {
 });
 
 tape('project_save_select', function(t) {
-	pg.project_save_select('test1', 'phptest').then(function(project) {
+	pg.project_save_select('phptest', 'test1').then(function(project) {
 		t.deepEqual(
 			project,
 			[{ 	document_content: '<?php echo "This is php test1";',
@@ -178,7 +178,7 @@ tape('project_save_select', function(t) {
 			}], 'PHP project test1 save'
 		);
 
-		return pg.project_save_select('test2', 'phptest');
+		return pg.project_save_select('phptest', 'test2');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
@@ -196,7 +196,7 @@ tape('project_save_select', function(t) {
 			}], 'PHP project test2 save'
 		);
 
-		return pg.project_save_select('test1', 'nodejstest');
+		return pg.project_save_select('nodejstest', 'test1');
 	}).then(function(project) {
 		t.deepEqual(
 			project,
@@ -214,7 +214,7 @@ tape('project_save_select', function(t) {
 			}], 'NodeJS project test1 save'
 		);
 
-		return pg.project_save_select('test2', 'nodejstest');
+		return pg.project_save_select('nodejstest', 'test2');
 	}).then(function(project) {
 		t.deepEqual(
 			project,

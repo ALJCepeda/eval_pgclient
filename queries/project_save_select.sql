@@ -12,4 +12,4 @@ SELECT  p.id as project_id,
 FROM project p
 JOIN save s ON s.project = p.id
 JOIN document d ON d.project = p.id AND d.save = s.id
-WHERE s.id = $1 AND p.id = $2;
+WHERE p.id = $1 AND s.id = $2; 

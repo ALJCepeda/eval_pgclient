@@ -59,8 +59,8 @@ Agent.prototype.projectSelect = function(id) {
     return this.pg.project_select(id).then(Agent.createProject);
 };
 
-Agent.prototype.projectSaveSelect = function(saveID, projectID) {
-    return this.pg.project_save_select(saveID, projectID).then(Agent.createProject);
+Agent.prototype.projectSaveSelect = function(projectID, saveID) {
+    return this.pg.project_save_select(projectID, saveID).then(Agent.createProject);
 };
 
 Agent.prototype.generateProjectID = function(length) {
@@ -107,7 +107,7 @@ Agent.createDocument = function(row) {
 
 Agent.createProject = function(rows) {
     if(!val.array(rows) || rows.length === 0) {
-        return;
+        return false;
     }
 
     var first = rows[0];
@@ -117,7 +117,7 @@ Agent.createProject = function(rows) {
         tag:first.project_tag,
         save: {
             id:first.save_id,
-            parent:first.save_parent,
+            parent:first.save_parent || '',
             root:first.project_saveroot,
             stdout:first.save_stdout,
             stderr:first.save_stderr
