@@ -70,7 +70,8 @@ CREATE TABLE save (
 	id TEXT NOT NULL,
 	project TEXT NOT NULL,
 	parent TEXT,
-	output TEXT NOT NULL,
+	stdout TEXT NOT NULL DEFAULT '',
+	stderr TEXT NOT NULL DEFAULT '',
 	created timestamp with time zone DEFAULT now(),
 	FOREIGN KEY(project) REFERENCES project,
 	PRIMARY KEY(id, project),
@@ -78,7 +79,7 @@ CREATE TABLE save (
 	FOREIGN KEY (parent, project) REFERENCES save(id, project)
 );
 
-INSERT INTO save (id, project, parent, output) VALUES
+INSERT INTO save (id, project, parent, stdout) VALUES
 	( 'test1', 'phptest', NULL, 'This is php test1' ),
 	( 'test2', 'phptest', 'test1', 'This is php test2' ),
 	( 'test1', 'nodejstest', NULL, 'This is nodejs test1' ),

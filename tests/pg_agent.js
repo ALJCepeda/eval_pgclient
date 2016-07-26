@@ -81,7 +81,8 @@ tape('projectSelect', function(t) {
 					id: 'test1',
 					root: 'test1',
 					parent: null,
-					output: 'This is php test1'
+					stdout: 'This is php test1',
+					stderr: ''
 				},
                 documents:{
                    index: {	id: 'index',
@@ -104,7 +105,8 @@ tape('projectSaveSelect', function(t) {
 					id: 'test2',
 					root: 'test1',
 					parent: 'test1',
-					output: 'This is php test2'
+					stdout: 'This is php test2',
+					stderr: ''
 				},
   				documents: {
 					index: { 	id: 'index',
@@ -135,7 +137,8 @@ var phpProject = new Project({
 		id: 'izesave',
 		root: 'izesave',
 		parent: null,
-		output: ''
+		stdout: '',
+		stderr: ''
 	},
 	documents: {
 		index: {
@@ -160,7 +163,8 @@ var save1Project = new Project({
 		id: 'save1',
 		root: 'izesave',
 		parent: 'izesave',
-		output: ''
+		stdout: '',
+		stderr: ''
 	},
 	documents: {
 		index: {
@@ -179,7 +183,8 @@ var save2Project = new Project({
 		id: 'save2',
 		root: 'izesave',
 		parent: 'save1',
-		output: ''
+		stdout: '',
+		stderr: ''
 	},
 	documents: {
 		index: {

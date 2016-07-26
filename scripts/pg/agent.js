@@ -38,9 +38,9 @@ Agent.prototype.saveInsert = function(project) {
     var self = this;
     var promise;
     if(project.save.hasParent() === true) {
-        promise = this.pg.save_parent_insert(project.id, project.save.id, project.save.parent, project.save.output);
+        promise = this.pg.save_parent_insert(project.id, project.save.id, project.save.parent, project.save.stdout, project.save.stderr);
     } else {
-        promise = this.pg.save_insert(project.id, project.save.id, project.save.output)
+        promise = this.pg.save_insert(project.id, project.save.id, project.save.stdout, project.save.stderr);
     }
 
     return promise.then(function(count) {
@@ -119,7 +119,8 @@ Agent.createProject = function(rows) {
             id:first.save_id,
             parent:first.save_parent,
             root:first.project_saveroot,
-            output:first.save_output
+            stdout:first.save_stdout,
+            stderr:first.save_stderr
         }
     });
 

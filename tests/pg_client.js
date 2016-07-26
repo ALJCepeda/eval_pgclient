@@ -133,7 +133,8 @@ tape('project_select', function(t) {
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
-				save_output: 'This is php test1',
+				save_stderr: '',
+				save_stdout: 'This is php test1',
 				save_parent: null
 			}], 'Selected phptest project'
 		);
@@ -150,7 +151,8 @@ tape('project_select', function(t) {
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
-				save_output: 'This is nodejs test1',
+				save_stderr: '',
+				save_stdout: 'This is nodejs test1',
 				save_parent: null
 			}], 'Selected nodejstest project'
 		);
@@ -170,7 +172,8 @@ tape('project_save_select', function(t) {
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
-				save_output: 'This is php test1',
+				save_stderr: '',
+				save_stdout: 'This is php test1',
 				save_parent: null
 			}], 'PHP project test1 save'
 		);
@@ -187,7 +190,8 @@ tape('project_save_select', function(t) {
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test2',
-				save_output: 'This is php test2',
+				save_stderr: '',
+				save_stdout: 'This is php test2',
 				save_parent: 'test1'
 			}], 'PHP project test2 save'
 		);
@@ -204,7 +208,8 @@ tape('project_save_select', function(t) {
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test1',
-				save_output: 'This is nodejs test1',
+				save_stderr: '',
+				save_stdout: 'This is nodejs test1',
 				save_parent: null
 			}], 'NodeJS project test1 save'
 		);
@@ -221,7 +226,8 @@ tape('project_save_select', function(t) {
 				project_saveroot: 'test1',
 				project_tag: 'latest',
 				save_id: 'test2',
-				save_output: 'This is nodejs test2',
+				save_stderr: '',
+				save_stdout: 'This is nodejs test2',
 				save_parent: 'test1'
 			}], 'NodeJS project test2 save'
 		);
@@ -237,7 +243,8 @@ tape('project_insert', function(t) {
 		t.equal(count, 1, 'Inserted project phpInsertTest');
 		return pg.save_insert( 	'phpInsertTest',
 								'save1',
-								'Hello World!');
+								'Hello World!',
+								'');
 	}).then(function(count) {
 		t.equal(count, 1, 'Inserted save save1');
 		return pg.document_insert(	'phpInsertTest',

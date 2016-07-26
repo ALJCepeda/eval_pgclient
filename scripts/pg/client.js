@@ -87,13 +87,13 @@ Client.prototype.save_id_exists = function(id) {
 			});
 };
 
-Client.prototype.save_insert = function(projectID, saveID, output) {
-	return this.query('save_insert', [ projectID, saveID, output ])
+Client.prototype.save_insert = function(projectID, saveID, stdout, stderr) {
+	return this.query('save_insert', [ projectID, saveID, stdout, stderr ])
 				.then(countRows);
 };
 
-Client.prototype.save_parent_insert = function(projectID, saveID, parentID, output) {
-	return this.query('save_parent_insert', [ projectID, saveID, parentID, output])
+Client.prototype.save_parent_insert = function(projectID, saveID, parentID, stdout, stderr) {
+	return this.query('save_parent_insert', [ projectID, saveID, parentID, stdout, stderr ])
 				.then(countRows);
 };
 

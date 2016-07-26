@@ -17,7 +17,8 @@
         this.id = '';
         this.root = '';
         this.parent = '';
-        this.output = '';
+        this.stdout = '';
+        this.stderr = '';
 
         obj.merge(this, data || {});
     };
@@ -35,7 +36,7 @@
         return  val.string(this.id)     && this.id.length === Save.IDLength &&
                 val.string(this.root)   && this.root.length === Save.IDLength &&
                 val.string(this.parent) && (this.parent === '' || this.parent.length === Save.IDLength) &&
-                val.string(this.output);
+                val.string(this.stdout) && val.string(this.stderr);
     };
 
     Save.IDLength = 8;
@@ -46,8 +47,9 @@
     Save.equal = function(a, b) {
         return  a.id === b.id &&
                 a.root === b.root &&
-                a.parent == b.parent &&
-                a.output === b.output;
+                a.parent === b.parent &&
+                a.stdout === b.stdout &&
+                a.stdout === b.stdout;
     };
 
     return Save;

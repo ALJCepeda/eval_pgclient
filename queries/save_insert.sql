@@ -1,1 +1,1 @@
-INSERT INTO save ( project, id, output ) VALUES ( $1, $2, $3 );
+INSERT INTO save ( project, id, stdout, stderr ) VALUES ( $1, $2, $3, $4 );
