@@ -18,9 +18,7 @@ Agent.prototype.projectInsert = function(project) {
     var self = this;
     return this.pg.project_insert(project.id, project.platform, project.tag, project.save.root)
                 .then(function(count) {
-                    return self.pg.save_insert(project.save.root, project.id);
-                }).then(function(count) {
-                    return self.documentInsert(project);
+                    return self.saveInsert(project);
                 });
 };
 
@@ -38,13 +36,14 @@ Agent.prototype.documentInsert = function(project) {
 
 Agent.prototype.saveInsert = function(project) {
     var self = this;
-    return this.pg.save_id_exists(project.save.id, project.id).then(function(exists) {
-        if(exists === true) {
-            throw new Error('Cannot insert save, already exists');
-        }
+    var promise;
+    if(project.save.hasParent() === true) {
+        promise = this.pg.save_parent_insert(project.id, project.save.id, project.save.parent, project.save.output);
+    } else {
+        promise = this.pg.save_insert(project.id, project.save.id, project.save.output)
+    }
 
-        return self.pg.save_insert(project.save.id, project.id);
-    }).then(function(count) {
+    return promise.then(function(count) {
         return self.documentInsert(project);
     });
 };

@@ -25,6 +25,9 @@
     Save.prototype.isRoot = function() {
         return this.valid() && this.root === this.id && this.parent === '';
     };
+    Save.prototype.hasParent = function() {
+        return this.valid() && this.parent !== '';
+    };
     Save.prototype.equal = function(b) {
         return Save.equal(this, b);
     };
