@@ -70,6 +70,7 @@ CREATE TABLE save (
 	id TEXT NOT NULL,
 	project TEXT NOT NULL,
 	parent TEXT,
+	output TEXT NOT NULL,
 	created timestamp with time zone DEFAULT now(),
 	FOREIGN KEY(project) REFERENCES project,
 	PRIMARY KEY(id, project),
@@ -77,25 +78,11 @@ CREATE TABLE save (
 	FOREIGN KEY (parent, project) REFERENCES save(id, project)
 );
 
-INSERT INTO save (id, project, parent) VALUES
-	( 'test1', 'phptest', NULL ),
-	( 'test2', 'phptest', 'test1' ),
-	( 'test1', 'nodejstest', NULL ),
-	( 'test2', 'nodejstest', 'test1');
-
-CREATE TABLE output (
-	save TEXT NOT NULL,
-	project TEXT NOT NULL,
-	content TEXT NOT NULL,
-	FOREIGN KEY(save, project) REFERENCES save ON DELETE CASCADE,
-	PRIMARY KEY(save, project)
-);
-
-INSERT INTO output (save, project, content) VALUES
-	('test1', 'phptest', 'This is php test1'),
-	('test2', 'phptest', 'This is php test2'),
-	('test1', 'nodejstest', 'This is nodejs test1'),
-	('test2', 'nodejstest', 'This is nodejs test2');
+INSERT INTO save (id, project, parent, output) VALUES
+	( 'test1', 'phptest', NULL, 'This is php test1' ),
+	( 'test2', 'phptest', 'test1', 'This is php test2' ),
+	( 'test1', 'nodejstest', NULL, 'This is nodejs test1' ),
+	( 'test2', 'nodejstest', 'test1', 'This is nodejs test2');
 
 CREATE TABLE document (
 	id TEXT NOT NULL,

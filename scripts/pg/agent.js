@@ -119,7 +119,7 @@ Agent.createProject = function(rows) {
             id:first.save_id,
             parent:first.save_parent,
             root:first.project_saveroot,
-            output:first.output_content
+            output:first.save_output
         }
     });
 
