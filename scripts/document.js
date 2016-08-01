@@ -18,6 +18,7 @@
         this.content = '';
 
         obj.merge(this, data || {});
+        this.content = this.content.replace(/\\n/g,'\n').replace(/\\t/g,'\t');
     };
 
     Document.prototype.equal = function(b) {

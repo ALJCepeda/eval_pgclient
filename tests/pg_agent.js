@@ -50,7 +50,7 @@ tape('platform', function(t) {
 							index: {
 								id:'index',
 								extension:'php',
-								content:'<?php\\n\\techo "Hello World!";'
+								content:'<?php\n\techo "Hello World!";'
 							}
 						}
                 },
@@ -86,7 +86,7 @@ tape('platform', function(t) {
 								index: {
 									id:'index',
 									extension:'pas',
-									content:'program Hello;\\nbegin\\n\\twriteln ("Hello World!");\\nend.'
+									content:'program Hello;\nbegin\n\twriteln ("Hello World!");\nend.'
 								}
 							}
                 }
