@@ -168,8 +168,14 @@ Agent.createPlatform = function(rows) {
         }
 
         dict[id].tags.push(tag);
-        if(val.defined(demo)) {
-            dict[id].demo[tag] = demo;
+        if(val.defined(row.demo_content)) {
+            var doc = Agent.createDocument({
+                document_id:'index',
+                document_extension:row.demo_extension,
+                document_content:row.demo_content
+            });
+
+            dict[id].demo = { index:doc };
         }
 
         return dict;

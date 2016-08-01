@@ -46,25 +46,49 @@ tape('platform', function(t) {
                         aceMode: 'php',
                         extension: 'php',
                         tags: [ 'latest', '5.5', '5.4', '5.6' ],
-                        demo: ''
+                        demo: {
+							index: {
+								id:'index',
+								extension:'php',
+								content:'<?php\\n\\techo "Hello World!";'
+							}
+						}
                 },
                 nodejs: {   name: 'NodeJS',
                             aceMode: 'javascript',
                             extension: 'js',
                             tags: [ 'latest', '0.12.7' ],
-                            demo: ''
+                            demo: {
+								index: {
+									id:'index',
+									extension:'js',
+									content:'console.log("Hello World!");'
+								}
+							}
                 },
                 haskell: {  name: 'Haskell',
                             aceMode: 'haskell',
                             extension: 'hs',
                             tags: [ 'latest' ],
-                            demo: ''
+                            demo: {
+								index: {
+									id:'index',
+									extension:'hs',
+									content:'main = putStrLn "Hello World!";'
+								}
+							}
                 },
                 pascal: {   name: 'Pascal',
                             aceMode: 'pascal',
                             extension: 'pas',
                             tags: [ 'latest' ],
-                            demo: ''
+                            demo: {
+								index: {
+									id:'index',
+									extension:'pas',
+									content:'program Hello;\\nbegin\\n\\twriteln ("Hello World!");\\nend.'
+								}
+							}
                 }
         }, 'Selected platform info');
     }).catch(t.fail).done(t.end);
@@ -120,7 +144,7 @@ tape('projectSaveSelect', function(t) {
 tape('projectSaveSelect - not found', function(t) {
 	agent.projectSaveSelect('phptest', 'testnone').then(function(project) {
 		t.false(project, 'SaveID not found, project is false');
-	});
+	}).catch(t.fail).done(t.end);
 });
 
 tape('generateProjectID', function(t) {
