@@ -1,7 +1,7 @@
 {
-  "name": "eval_pgclient",
+  "name": "eval_shared",
   "version": "0.0.0",
-  "description": "PSQL Wrapper for eval service",
+  "description": "Shared classes for Eval project",
   "main": "index.js",
   "scripts": {
     "test": "node tests"

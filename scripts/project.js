@@ -76,11 +76,11 @@
         }
 
         return true;
-    }
+    };
 
     Project.identical = function(a, b) {
         return Project.equal(a, b) && a.save.equal(b.save);
-    }
+    };
 
     return Project;
 }));

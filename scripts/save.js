@@ -29,6 +29,9 @@
     Save.prototype.hasParent = function() {
         return this.valid() && this.parent !== '';
     };
+    Save.prototype.hasOutput = function() {
+        return this.valid() && (this.stdout !== '' || this.stderr !== '');
+    };
     Save.prototype.equal = function(b) {
         return Save.equal(this, b);
     };
@@ -47,9 +50,7 @@
     Save.equal = function(a, b) {
         return  a.id === b.id &&
                 a.root === b.root &&
-                a.parent === b.parent &&
-                a.stdout === b.stdout &&
-                a.stdout === b.stdout;
+                a.parent === b.parent;
     };
 
     return Save;
