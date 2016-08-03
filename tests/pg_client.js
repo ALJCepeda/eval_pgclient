@@ -110,17 +110,6 @@ tape('project_id_exists', function(t) {
 	}).catch(t.fail).done(t.end);
 });
 
-tape('project_ids_select', function(t) {
-	pg.project_ids_select().then(function(ids) {
-		t.deepEqual(
-			ids,
-			[ 'phptest', 'nodejstest' ],
-			'Array of project names'
-		);
-	}).catch(t.fail).done(t.end);
-});
-
-
 tape('project_select', function(t) {
 	pg.project_select('phptest').then(function(project) {
 		t.deepEqual(

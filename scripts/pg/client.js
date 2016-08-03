@@ -34,6 +34,7 @@ Client.prototype.query = function(name, args) {
 
 					done();
 					resolve(result);
+					pg.end();
 				});
 			});
 		});
