@@ -118,7 +118,7 @@ Agent.createProject = function(rows) {
         save: {
             id:first.save_id,
             parent:first.save_parent || '',
-            root:first.project_saveroot,
+            root:first.project_save_root,
             stdout:first.save_stdout,
             stderr:first.save_stderr
         }
