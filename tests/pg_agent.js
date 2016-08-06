@@ -3,7 +3,7 @@ var Project = require('./../scripts/project');
 
 var Promise = require('bluebird');
 var tape = require('tape');
-var url = 'postgres://vagrant:password@localhost/eval';
+var url = process.env.PSQL_EVAL;
 
 var agent = new Agent(url);
 var xtape = function(name) {
