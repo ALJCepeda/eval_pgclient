@@ -2,7 +2,7 @@ var Client = require('./../scripts/pg/client');
 
 var Promise = require('bluebird');
 var tape = require('tape');
-var url = 'postgres://vagrant:password@localhost/eval';
+var url = process.env.PSQL_EVAL;
 
 var pg = new Client(url);
 var xtape = function(name) {
