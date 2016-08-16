@@ -30,8 +30,8 @@
     Project.prototype.hasRecord = function() {
         return this.valid() && this.id !== '' && this.save.valid();
     };
-    Project.prototype.equal = function(b) {
-        return Project.equal(this, b);
+    Project.prototype.equal = function(b, strict) {
+        return Project.equal(this, b, strict);
     };
     Project.prototype.identical = function(b) {
         return Project.identical(this, b);
@@ -61,9 +61,8 @@
     };
 
     Project.IDLength = 8;
-    Project.equal = function(a, b) {
-        if( a.id !== b.id ||
-            a.platform !== b.platform ||
+    Project.equal = function(a, b, strict) {
+        if( a.platform !== b.platform ||
             a.tag !== b.tag ) {
                 return false;
             }
@@ -75,11 +74,15 @@
             }
         }
 
+        if(strict === true) {
+            return a.id === b.id;
+        }
+
         return true;
     };
 
     Project.identical = function(a, b) {
-        return Project.equal(a, b) && a.save.equal(b.save);
+        return a.equal(b, true) && a.save.equal(b.save);
     };
 
     return Project;

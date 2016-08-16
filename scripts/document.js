@@ -21,8 +21,8 @@
         this.content = this.content.replace(/\\n/g,'\n').replace(/\\t/g,'\t');
     };
 
-    Document.prototype.equal = function(b) {
-        return Document.equal(this, b);
+    Document.prototype.equal = function(b, strict) {
+        return Document.equal(this, b, strict);
     };
     Document.prototype.valid = function(b) {
         return  val.string(this.id)         && this.id !== '' &&
@@ -36,10 +36,14 @@
         }, {});
     };
 
-    Document.equal = function(a, b) {
-        return  a.id === b.id &&
-                a.extension === b.extension &&
-                a.content === b.content;
+    Document.equal = function(a, b, strict) {
+        var isEqual = a.extension === b.extension && a.content === b.content;
+
+        if(strict === true) {
+            return isEqual && a.id === b.id;
+        }
+
+        return isEqual;
     };
 
     return Document;
