@@ -103,22 +103,3 @@ INSERT INTO document (id, save, project, extension, content) VALUES
 	('index', 'test2', 'phptest', 'php', '<?php echo "This is php test2";'),
 	('index', 'test1', 'nodejstest', 'js', 'console.log("This is nodejs test1");'),
 	('index', 'test2', 'nodejstest', 'js', 'console.log("This is nodejs test2");');
-
-REVOKE CONNECT ON DATABASE eval FROM PUBLIC;
-
-GRANT CONNECT
-ON DATABASE eval
-TO app_eval;
-
-REVOKE ALL
-ON ALL TABLES IN SCHEMA public
-FROM PUBLIC;
-
-GRANT SELECT, INSERT, UPDATE, DELETE
-ON ALL TABLES IN SCHEMA public
-TO app_eval;
-
-ALTER DEFAULT PRIVILEGES
-FOR USER app_eval
-IN SCHEMA public
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_eval;
