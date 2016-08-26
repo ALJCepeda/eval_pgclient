@@ -54,7 +54,7 @@ INSERT INTO demo ( platform, tag, extension, content ) VALUES
 	( 'php', 'latest', 'php', '<?php\n\techo "Hello World!";' ),
 	( 'nodejs', 'latest', 'js', 'console.log("Hello World!");' ),
 	( 'haskell', 'latest', 'hs', 'main = putStrLn "Hello World!";' ),
-	( 'pascal', 'latest', 'pas', 'program Hello;\nbegin\n\twriteln ("Hello World!");\nend.');
+	( 'pascal', 'latest', 'pas', 'program Hello;\nbegin\n\twriteln (''Hello World!'');\nend.');
 
 CREATE TABLE project (
     id TEXT PRIMARY KEY,
